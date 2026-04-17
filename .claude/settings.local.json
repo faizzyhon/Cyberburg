@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import ast; ast.parse\\(open\\('cyberburg.py'\\).read\\(\\)\\); print\\('cyberburg.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('modules/auth_tester.py'\\).read\\(\\)\\); print\\('auth_tester.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('modules/bug_bounty_report.py'\\).read\\(\\)\\); print\\('bug_bounty_report.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('dashboard/app.py'\\).read\\(\\)\\); print\\('dashboard/app.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('cyberburg.py', encoding='utf-8'\\).read\\(\\)\\); print\\('cyberburg.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('modules/auth_tester.py', encoding='utf-8'\\).read\\(\\)\\); print\\('auth_tester.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('modules/bug_bounty_report.py', encoding='utf-8'\\).read\\(\\)\\); print\\('bug_bounty_report.py OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('dashboard/app.py', encoding='utf-8'\\).read\\(\\)\\); print\\('dashboard/app.py OK'\\)\")",
+      "Bash(python3 *)",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

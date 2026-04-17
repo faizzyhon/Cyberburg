@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberburg Dashboard</title>
+<style>
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --border:   #30363d;
+    --text:     #e6edf3;
+    --muted:    #8b949e;
+    --accent:   #00d4aa;
+    --blue:     #58a6ff;
+    --critical: #ff4444;
+    --high:     #ff8800;
+    --medium:   #f0c040;
+    --low:      #3fb950;
+    --info:     #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ── Top Bar ── */
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .logo { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 2px; white-space: nowrap; }
+  .logo span { color: var(--muted); font-size: 11px; font-weight: 400; margin-left: 8px; }
+  .stats { display: flex; gap: 16px; margin-left: auto; }
+  .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; text-align: center; min-width: 80px; cursor: default; }
+  .stat-card .num { font-size: 20px; font-weight: 700; }
+  .stat-card .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .stat-card.critical .num { color: var(--critical); }
+  .stat-card.high .num { color: var(--high); }
+  .stat-card.active .num { color: var(--accent); }
+  .topbar-btn { background: var(--accent); color: #000; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 700; cursor: pointer; font-size: 13px; white-space: nowrap; }
+  .topbar-btn:hover { opacity: 0.85; }
+
+  /* ── Layout ── */
+  .layout { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar { width: 280px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .sidebar-header { padding: 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .scan-list { flex: 1; overflow-y: auto; }
+  .scan-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+  .scan-item:hover { background: rgba(255,255,255,0.04); }
+  .scan-item.active { background: rgba(0,212,170,0.08); border-left: 3px solid var(--accent); }
+  .scan-item .s-target { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .scan-item .s-meta { font-size: 11px; color: var(--muted); margin-top: 2px; display: flex; gap: 6px; align-items: center; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .badge.CRITICAL { background: rgba(255,68,68,0.2); color: var(--critical); }
+  .badge.HIGH     { background: rgba(255,136,0,0.2); color: var(--high); }
+  .badge.MEDIUM   { background: rgba(240,192,64,0.2); color: var(--medium); }
+  .badge.LOW      { background: rgba(63,185,80,0.2); color: var(--low); }
+  .badge.INFO     { background: rgba(88,166,255,0.2); color: var(--info); }
+  .badge.running  { background: rgba(0,212,170,0.2); color: var(--accent); }
+  .badge.complete { background: rgba(88,166,255,0.2); color: var(--blue); }
+  .badge.stopped  { background: rgba(139,148,158,0.2); color: var(--muted); }
+  .badge.error    { background: rgba(255,68,68,0.2); color: var(--critical); }
+  .empty-msg { padding: 40px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+
+  /* ── Main Panel ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .main-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .main-title { font-size: 16px; font-weight: 600; }
+  .main-sub { font-size: 12px; color: var(--muted); }
+  .btn { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: all 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.danger { border-color: var(--critical); color: var(--critical); }
+  .btn.danger:hover { background: rgba(255,68,68,0.1); }
+  .btn.primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+  .btn.primary:hover { opacity: 0.85; }
+  .ml-auto { margin-left: auto; }
+  .btn-row { display: flex; gap: 8px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 20px; flex-shrink: 0; }
+  .tab { padding: 10px 16px; cursor: pointer; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-badge { background: var(--critical); color: #fff; border-radius: 20px; padding: 1px 6px; font-size: 10px; margin-left: 5px; }
+
+  /* ── Tab Content ── */
+  .tab-content { flex: 1; overflow-y: auto; padding: 16px 20px; display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Console ── */
+  .console { background: #0a0e13; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; font-size: 12px; height: 100%; min-height: 300px; max-height: calc(100vh - 250px); overflow-y: auto; line-height: 1.6; }
+  .log-line { margin: 0; }
+  .log-line .ts { color: #4a5568; margin-right: 8px; }
+  .log-line.info .msg    { color: #a0aec0; }
+  .log-line.success .msg { color: #68d391; }
+  .log-line.warn .msg    { color: #f6e05e; }
+  .log-line.error .msg   { color: #fc8181; }
+  .log-line.critical .msg{ color: #ff4444; font-weight: bold; }
+  .log-line.section .msg { color: var(--accent); font-weight: bold; margin-top: 8px; }
+  .log-line.debug .msg   { color: #4a5568; }
+
+  /* ── Findings Table ── */
+  .findings-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .findings-table th { background: var(--surface); text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+  .findings-table td { padding: 10px 12px; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: top; }
+  .findings-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .f-title { font-weight: 600; }
+  .f-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .f-evidence { font-family: monospace; font-size: 11px; background: var(--bg); padding: 4px 8px; border-radius: 4px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+  .f-remediation { font-size: 11px; color: #68d391; }
+  .no-findings { color: var(--muted); text-align: center; padding: 40px; }
+
+  /* ── Reports Tab ── */
+  .report-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+  .report-icon { font-size: 28px; }
+  .report-name { font-weight: 600; }
+  .report-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .report-card.critical-report { border-color: var(--critical); background: rgba(255,68,68,0.05); }
+  .report-card.critical-report .report-icon { animation: pulse 1.5s infinite; }
+
+  /* ── Welcome / Empty State ── */
+  .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 40px; }
+  .welcome h2 { font-size: 22px; color: var(--accent); margin-bottom: 10px; }
+  .welcome p { color: var(--muted); max-width: 400px; line-height: 1.6; margin-bottom: 24px; }
+
+  /* ── Critical Alert Toast ── */
+  .alert-container { position: fixed; top: 70px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; }
+  .alert-toast { background: #1a0a0a; border: 1px solid var(--critical); border-radius: 8px; padding: 14px 16px; animation: slideIn 0.3s ease; box-shadow: 0 4px 20px rgba(255,68,68,0.3); }
+  .alert-toast.HIGH { border-color: var(--high); background: #1a1000; box-shadow: 0 4px 20px rgba(255,136,0,0.3); }
+  .alert-toast .a-title { font-weight: 700; font-size: 13px; color: var(--critical); }
+  .alert-toast.HIGH .a-title { color: var(--high); }
+  .alert-toast .a-module { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .alert-toast .a-time { font-size: 10px; color: var(--muted); margin-top: 6px; }
+  .alert-toast .a-close { float: right; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; margin-top: -2px; }
+  .alert-toast .a-close:hover { color: var(--text); }
+
+  /* ── Modal ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+  .modal h2 { font-size: 18px; margin-bottom: 6px; }
+  .modal .sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; color: var(--text); font-size: 13px; outline: none; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+  .ethical-notice { background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.3); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .ethical-notice strong { color: var(--accent); }
+
+  /* ── Scan Detail Header ── */
+  .detail-meta { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 12px; flex-shrink: 0; }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-item .mk { color: var(--muted); font-size: 10px; text-transform: uppercase; }
+  .meta-item .mv { font-weight: 600; }
+
+  /* ── Spinner ── */
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* ── Scrollbars ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Severity count chips ── */
+  .sev-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sev-chip { padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+
+  /* ── Progress bar ── */
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 0 20px 0; flex-shrink: 0; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s; animation: progressAnim 2s linear infinite; }
+  @keyframes progressAnim { from { margin-left: -30%; width: 30%; } to { margin-left: 100%; width: 30%; } }
+  .progress-bar.hidden { display: none; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .filter-btn { padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.f-CRITICAL.active { border-color: var(--critical); color: var(--critical); }
+  .filter-btn.f-HIGH.active { border-color: var(--high); color: var(--high); }
+  .filter-btn.f-MEDIUM.active { border-color: var(--medium); color: var(--medium); }
+</style>
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <div class="logo">CYBERBURG <span>DASHBOARD v2.0</span></div>
+  <div class="stats">
+    <div class="stat-card active">
+      <div class="num" id="stat-active">0</div>
+      <div class="lbl">Active</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-total">0</div>
+      <div class="lbl">Scans</div>
+    </div>
+    <div class="stat-card critical">
+      <div class="num" id="stat-critical">0</div>
+      <div class="lbl">Critical</div>
+    </div>
+    <div class="stat-card high">
+      <div class="num" id="stat-high">0</div>
+      <div class="lbl">High</div>
+    </div>
+  </div>
+  <button class="topbar-btn" onclick="openNewScanModal()">+ New Scan</button>
+</div>
+
+<!-- ── Alert Toast Container ── -->
+<div class="alert-container" id="alertContainer"></div>
+
+<!-- ── Main Layout ── -->
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">Recent Scans</div>
+    <div class="scan-list" id="scanList">
+      <div class="empty-msg">No scans yet.<br>Click <strong>+ New Scan</strong> to start.</div>
+    </div>
+  </div>
+
+  <!-- Main Panel -->
+  <div class="main" id="mainPanel">
+
+    <!-- Welcome state -->
+    <div class="welcome" id="welcomeState">
+      <h2>CYBERBURG DASHBOARD</h2>
+      <p>Manage security scans, view live findings, and generate bug bounty reports — all from your browser.</p>
+      <p style="color: var(--accent); font-size: 12px;">⚖️ Only test targets you own or have written authorization to test.</p>
+      <button class="topbar-btn" style="margin-top:8px" onclick="openNewScanModal()">+ New Scan</button>
+    </div>
+
+    <!-- Scan detail view -->
+    <div id="scanDetailView" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+      <!-- Header -->
+      <div class="main-header">
+        <div>
+          <div class="main-title" id="detailTarget">—</div>
+          <div class="main-sub" id="detailMode">—</div>
+        </div>
+        <div class="ml-auto btn-row">
+          <div id="detailSpinner" class="spinner" style="display:none"></div>
+          <button class="btn danger" id="stopBtn" onclick="stopCurrentScan()" style="display:none">■ Stop</button>
+          <button class="btn" id="dlReportBtn" onclick="downloadReport()" style="display:none">⬇ HTML Report</button>
+          <button class="btn primary" id="dlBBBtn" onclick="downloadBugBounty()" style="display:none">🚨 Bug Bounty Report</button>
+        </div>
+      </div>
+
+      <!-- Meta bar -->
+      <div class="detail-meta" id="detailMeta"></div>
+
+      <!-- Progress bar -->
+      <div class="progress-bar hidden" id="progressBar">
+        <div class="progress-fill"></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('console')">Console</div>
+        <div class="tab" onclick="switchTab('findings')">
+          Findings <span class="tab-badge" id="findingsBadge" style="display:none">0</span>
+        </div>
+        <div class="tab" onclick="switchTab('reports')">Reports</div>
+      </div>
+
+      <!-- Console tab -->
+      <div class="tab-content active" id="tab-console">
+        <div class="console" id="consoleOutput"></div>
+      </div>
+
+      <!-- Findings tab -->
+      <div class="tab-content" id="tab-findings">
+        <div class="filter-row">
+          <span style="color:var(--muted);font-size:12px">Filter:</span>
+          <button class="filter-btn active" onclick="filterFindings('ALL')">All</button>
+          <button class="filter-btn f-CRITICAL" onclick="filterFindings('CRITICAL')">🔴 Critical</button>
+          <button class="filter-btn f-HIGH" onclick="filterFindings('HIGH')">🟠 High</button>
+          <button class="filter-btn f-MEDIUM" onclick="filterFindings('MEDIUM')">🟡 Medium</button>
+          <button class="filter-btn f-LOW" onclick="filterFindings('LOW')">🟢 Low</button>
+          <button class="filter-btn f-INFO" onclick="filterFindings('INFO')">⚪ Info</button>
+          <span id="findingsCount" style="color:var(--muted);font-size:11px;margin-left:auto"></span>
+        </div>
+        <table class="findings-table" id="findingsTable">
+          <thead>
+            <tr>
+              <th style="width:100px">Severity</th>
+              <th>Finding</th>
+              <th style="width:120px">Module</th>
+              <th style="width:160px">Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="findingsTbody">
+            <tr><td colspan="4" class="no-findings">No findings yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Reports tab -->
+      <div class="tab-content" id="tab-reports">
+        <div id="reportsContainer">
+          <p style="color:var(--muted);padding:40px;text-align:center">Reports will appear here when the scan completes.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ── New Scan Modal ── -->
+<div class="modal-overlay" id="newScanModal" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <h2>🔍 New Security Scan</h2>
+    <p class="sub">Configure and start a new penetration testing session.</p>
+
+    <div class="ethical-notice">
+      <strong>⚖️ Ethical Notice:</strong> Only scan targets you own or have explicit written authorization to test.
+      Unauthorized scanning is illegal under computer misuse laws worldwide.
+    </div>
+
+    <div class="form-group">
+      <label>Target *</label>
+      <input type="text" id="f-target" placeholder="example.com or https://example.com or 192.168.1.1" autofocus>
+    </div>
+
+    <div class="form-group">
+      <label>Scan Mode</label>
+      <select id="f-mode">
+        <option value="quick">⚡ Quick (Recon + Ports + SSL + Web) — 5-15 min</option>
+        <option value="full">🔥 Full (All Modules) — 30-120 min</option>
+        <option value="web">🌐 Web Vulnerability Only — 10-20 min</option>
+        <option value="recon">🔎 Reconnaissance Only — 5-10 min</option>
+        <option value="ssl">🔒 SSL/TLS Only — 2-5 min</option>
+        <option value="auth">🔑 Authentication Testing Only — 5-10 min</option>
+        <option value="vuln">💥 Vulnerability Scan Only — 15-30 min</option>
+        <option value="stealth">👻 Stealth Scan — 15-30 min</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Login URL (optional)</label>
+      <input type="text" id="f-login-url" placeholder="https://example.com/admin/login">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Username / Email (optional)</label>
+        <input type="text" id="f-username" placeholder="admin">
+      </div>
+      <div class="form-group">
+        <label>Password (optional)</label>
+        <input type="password" id="f-password" placeholder="••••••••">
+      </div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted)">
+      Username/password are tested against the login URL and common admin panels.
+      They are stored locally only and never transmitted externally.
+    </p>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeNewScanModal()">Cancel</button>
+      <button class="btn primary" onclick="submitNewScan()">▶ Start Scan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ─────────────────────────────────────────────────────────────────
+let currentScanId = null;
+let sseSource = null;
+let allFindings = [];
+let currentFilter = 'ALL';
+let currentScan = {};
+let statsInterval = null;
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadScans();
+  refreshStats();
+  statsInterval = setInterval(refreshStats, 5000);
+  setInterval(loadScans, 10000);
+});
+
+// ─── Stats ─────────────────────────────────────────────────────────────────
+async function refreshStats() {
+  try {
+    const r = await fetch('/api/stats');
+    const d = await r.json();
+    document.getElementById('stat-active').textContent   = d.active;
+    document.getElementById('stat-total').textContent    = d.total;
+    document.getElementById('stat-critical').textContent = d.critical;
+    document.getElementById('stat-high').textContent     = d.high;
+  } catch(e) {}
+}
+
+// ─── Scan List ─────────────────────────────────────────────────────────────
+async function loadScans() {
+  try {
+    const r = await fetch('/api/scans');
+    const scans = await r.json();
+    renderScanList(scans);
+  } catch(e) {}
+}
+
+function renderScanList(scans) {
+  const el = document.getElementById('scanList');
+  if (!scans.length) {
+    el.innerHTML = '<div class="empty-msg">No scans yet.<br>Click <strong>+ New Scan</strong> to start.</div>';
+    return;
+  }
+  el.innerHTML = scans.map(s => {
+    const isActive = s.id === currentScanId ? 'active' : '';
+    const status = s.risk_rating || s.status;
+    const timeStr = s.started_at ? new Date(s.started_at).toLocaleString() : '';
+    const spin = s.status === 'running' ? '<span class="spinner" style="width:10px;height:10px"></span>' : '';
+    return `<div class="scan-item ${isActive}" onclick="selectScan('${s.id}')">
+      <div class="s-target">${esc(s.target)}</div>
+      <div class="s-meta">
+        <span class="badge ${status}">${status || s.status}</span>
+        <span>${esc(s.scan_mode)}</span>
+        ${spin}
+        <span style="margin-left:auto">${timeStr ? timeStr.substring(0,16) : ''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Select Scan ───────────────────────────────────────────────────────────
+async function selectScan(sid) {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  currentScanId = sid;
+  allFindings = [];
+  currentFilter = 'ALL';
+
+  document.getElementById('welcomeState').style.display = 'none';
+  const dv = document.getElementById('scanDetailView');
+  dv.style.display = 'flex';
+
+  // Reset UI
+  document.getElementById('consoleOutput').innerHTML = '';
+  document.getElementById('findingsTbody').innerHTML = '<tr><td colspan="4" class="no-findings">No findings yet.</td></tr>';
+  document.getElementById('reportsContainer').innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center">Reports will appear here when the scan completes.</p>';
+  document.getElementById('findingsBadge').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('dlReportBtn').style.display = 'none';
+  document.getElementById('dlBBBtn').style.display = 'none';
+
+  switchTab('console');
+  loadScans(); // update active item
+
+  try {
+    const r = await fetch(`/api/scans/${sid}`);
+    const scan = await r.json();
+    currentScan = scan;
+    renderScanHeader(scan);
+
+    // Load existing findings
+    (scan.findings || []).forEach(f => addFinding(f));
+
+    // Connect SSE
+    if (scan.status === 'running') {
+      connectSSE(sid);
+      document.getElementById('stopBtn').style.display = '';
+      document.getElementById('progressBar').classList.remove('hidden');
+      document.getElementById('detailSpinner').style.display = '';
+    } else {
+      document.getElementById('progressBar').classList.add('hidden');
+      document.getElementById('detailSpinner').style.display = 'none';
+      renderReports(scan);
+    }
+  } catch(e) {
+    appendLog('Error loading scan: ' + e, 'error');
+  }
+}
+
+function renderScanHeader(scan) {
+  document.getElementById('detailTarget').textContent = scan.target;
+  document.getElementById('detailMode').textContent =
+    `${scan.scan_mode.toUpperCase()} scan` +
+    (scan.username ? ` | Auth: ${scan.username}` : '') +
+    (scan.login_url ? ` | Login: ${scan.login_url}` : '');
+
+  const meta = document.getElementById('detailMeta');
+  const risk = scan.risk_rating || '—';
+  const riskColor = {CRITICAL:'var(--critical)',HIGH:'var(--high)',MEDIUM:'var(--medium)',LOW:'var(--low)'}[risk] || 'var(--muted)';
+  const started = scan.started_at ? new Date(scan.started_at).toLocaleString() : '—';
+  const ended = scan.completed_at ? new Date(scan.completed_at).toLocaleString() : '—';
+  const statusColor = scan.status === 'running' ? 'var(--accent)' : (scan.status === 'complete' ? 'var(--blue)' : 'var(--muted)');
+
+  meta.innerHTML = `
+    <div class="meta-item"><span class="mk">Status</span><span class="mv" style="color:${statusColor}">${scan.status.toUpperCase()}</span></div>
+    <div class="meta-item"><span class="mk">Risk</span><span class="mv" style="color:${riskColor}">${risk}</span></div>
+    <div class="meta-item"><span class="mk">Mode</span><span class="mv">${scan.scan_mode}</span></div>
+    <div class="meta-item"><span class="mk">Started</span><span class="mv">${started}</span></div>
+    <div class="meta-item"><span class="mk">Completed</span><span class="mv">${ended}</span></div>
+    <div class="meta-item"><span class="mk">Scan ID</span><span class="mv" style="font-family:monospace">${scan.id}</span></div>
+  `;
+}
+
+// ─── SSE ───────────────────────────────────────────────────────────────────
+function connectSSE(sid) {
+  sseSource = new EventSource(`/api/scans/${sid}/events`);
+
+  sseSource.onmessage = (e) => {
+    let ev;
+    try { ev = JSON.parse(e.data); } catch { return; }
+    if (ev.type === 'end') { sseSource.close(); return; }
+
+    switch (ev.type) {
+      case 'log':
+        appendLog(ev.data.msg, ev.data.level);
+        break;
+      case 'finding':
+        addFinding(ev.data);
+        break;
+      case 'alert':
+        showAlert(ev.data);
+        break;
+      case 'status':
+        handleStatus(ev.data);
+        break;
+      case 'report':
+        handleReport(ev.data);
+        break;
+      case 'bug_bounty':
+        handleBugBounty(ev.data);
+        break;
+    }
+  };
+
+  sseSource.onerror = () => {
+    if (sseSource) sseSource.close();
+  };
+}
+
+// ─── Console ───────────────────────────────────────────────────────────────
+function appendLog(msg, level = 'info') {
+  const el = document.getElementById('consoleOutput');
+  const p = document.createElement('p');
+  p.className = `log-line ${level}`;
+  const now = new Date().toTimeString().substring(0,8);
+  p.innerHTML = `<span class="ts">${now}</span><span class="msg">${esc(msg)}</span>`;
+  el.appendChild(p);
+  el.scrollTop = el.scrollHeight;
+}
+
+// ─── Findings ──────────────────────────────────────────────────────────────
+function addFinding(f) {
+  allFindings.push(f);
+  renderFindingsTable();
+  const badge = document.getElementById('findingsBadge');
+  badge.textContent = allFindings.length;
+  badge.style.display = '';
+}
+
+const SEV_ICONS = {CRITICAL:'🔴',HIGH:'🟠',MEDIUM:'🟡',LOW:'🟢',INFO:'⚪'};
+
+function renderFindingsTable() {
+  const tbody = document.getElementById('findingsTbody');
+  const shown = currentFilter === 'ALL' ? allFindings : allFindings.filter(f => f.severity === currentFilter);
+
+  document.getElementById('findingsCount').textContent = `${shown.length} of ${allFindings.length} findings`;
+
+  if (!shown.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="no-findings">No findings match the filter.</td></tr>';
+    return;
+  }
+
+  const order = {CRITICAL:0,HIGH:1,MEDIUM:2,LOW:3,INFO:4};
+  const sorted = [...shown].sort((a,b) => (order[a.severity]||4) - (order[b.severity]||4));
+
+  tbody.innerHTML = sorted.map(f => `
+    <tr>
+      <td><span class="badge ${f.severity}">${SEV_ICONS[f.severity]||''} ${f.severity}</span></td>
+      <td>
+        <div class="f-title">${esc(f.title||'')}</div>
+        ${f.description ? `<div class="f-desc">${esc(f.description.substring(0,120))}${f.description.length>120?'…':''}</div>` : ''}
+        ${f.remediation ? `<div class="f-remediation">💡 ${esc(f.remediation.substring(0,100))}${f.remediation.length>100?'…':''}</div>` : ''}
+      </td>
+      <td style="color:var(--muted);font-size:11px">${esc(f.module||'')}</td>
+      <td>${f.evidence ? `<div class="f-evidence" title="${esc(f.evidence)}">${esc(f.evidence.substring(0,60))}</div>` : ''}</td>
+    </tr>
+  `).join('');
+}
+
+function filterFindings(sev) {
+  currentFilter = sev;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.filter-btn.f-${sev}`) || document.querySelector('.filter-btn:first-of-type');
+  if (btn) btn.classList.add('active');
+  renderFindingsTable();
+}
+
+// ─── Status / Reports / Bug Bounty ─────────────────────────────────────────
+function handleStatus(d) {
+  document.getElementById('progressBar').classList.add('hidden');
+  document.getElementById('detailSpinner').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'none';
+
+  if (sseSource) { sseSource.close(); sseSource = null; }
+
+  // Refresh scan metadata
+  selectScan(currentScanId);
+  refreshStats();
+  loadScans();
+}
+
+function handleReport(d) {
+  currentScan.report_html = d.html;
+  currentScan.report_json = d.json;
+  document.getElementById('dlReportBtn').style.display = '';
+  renderReports(currentScan);
+}
+
+function handleBugBounty(d) {
+  currentScan.bug_bounty_path = d.file;
+  document.getElementById('dlBBBtn').style.display = '';
+  renderReports(currentScan);
+
+  // Big alert
+  const toast = document.createElement('div');
+  toast.className = 'alert-toast';
+  toast.innerHTML = `
+    <span class="a-close" onclick="this.parentElement.remove()">×</span>
+    <div class="a-title">🚨 Bug Bounty Report Generated!</div>
+    <div class="a-module">${d.critical} Critical, ${d.high} High findings found</div>
+    <div class="a-time">${d.msg}</div>
+  `;
+  document.getElementById('alertContainer').prepend(toast);
+  setTimeout(() => toast.remove(), 15000);
+}
+
+function renderReports(scan) {
+  const c = document.getElementById('reportsContainer');
+  let html = '';
+  if (scan.bug_bounty_path) {
+    html += `<div class="report-card critical-report">
+      <div class="report-icon">🚨</div>
+      <div>
+        <div class="report-name">Bug Bounty Report</div>
+        <div class="report-sub">Submission-ready Markdown — Critical findings documented</div>
+      </div>
+      <button class="btn primary" style="margin-left:auto" onclick="downloadBugBounty()">Download</button>
+    </div>`;
+  }
+  if (scan.report_html) {
+    html += `<div class="report-card">
+      <div class="report-icon">📄</div>
+      <div>
+        <div class="report-name">HTML Report</div>
+        <div class="report-sub">${scan.report_html}</div>
+      </div>
+      <button class="btn" style="margin-left:auto" onclick="downloadReport()">Download</button>
+    </div>`;
+  }
+  if (!html) {
+    html = '<p style="color:var(--muted);padding:40px;text-align:center">Reports will appear here when the scan completes.</p>';
+  }
+  c.innerHTML = html;
+  if (scan.report_html) document.getElementById('dlReportBtn').style.display = '';
+  if (scan.bug_bounty_path) document.getElementById('dlBBBtn').style.display = '';
+}
+
+// ─── Alert Toast ───────────────────────────────────────────────────────────
+function showAlert(d) {
+  const container = document.getElementById('alertContainer');
+  const toast = document.createElement('div');
+  toast.className = `alert-toast ${d.severity === 'HIGH' ? 'HIGH' : ''}`;
+  toast.innerHTML = `
+    <span class="a-close" onclick="this.parentElement.remove()">×</span>
+    <div class="a-title">${esc(d.title||'')}</div>
+    <div class="a-module">Module: ${esc(d.module||'')}</div>
+    <div class="a-time">${d.ts || ''}</div>
+  `;
+  container.prepend(toast);
+  setTimeout(() => toast.remove && toast.remove(), 12000);
+
+  // Auto switch to findings tab for criticals
+  if (d.severity === 'CRITICAL') {
+    switchTab('findings');
+  }
+}
+
+// ─── Stop Scan ─────────────────────────────────────────────────────────────
+async function stopCurrentScan() {
+  if (!currentScanId) return;
+  if (!confirm('Stop the current scan?')) return;
+  try {
+    await fetch(`/api/scans/${currentScanId}/stop`, {method:'POST'});
+    document.getElementById('stopBtn').style.display = 'none';
+    document.getElementById('progressBar').classList.add('hidden');
+    document.getElementById('detailSpinner').style.display = 'none';
+    appendLog('Scan stopped by user.', 'warn');
+  } catch(e) {}
+}
+
+// ─── Downloads ─────────────────────────────────────────────────────────────
+function downloadReport() {
+  if (currentScan.report_html) window.open(`/api/reports/${currentScan.report_html}`, '_blank');
+}
+
+function downloadBugBounty() {
+  if (currentScan.bug_bounty_path) window.open(`/api/bug_bounty/${currentScan.bug_bounty_path}`, '_blank');
+}
+
+// ─── Tabs ──────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['console','findings','reports'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === `tab-${name}`);
+  });
+}
+
+// ─── Modal ─────────────────────────────────────────────────────────────────
+function openNewScanModal() {
+  document.getElementById('newScanModal').classList.add('open');
+  document.getElementById('f-target').focus();
+}
+
+function closeNewScanModal() {
+  document.getElementById('newScanModal').classList.remove('open');
+}
+
+function closeOnOverlay(e) {
+  if (e.target === e.currentTarget) closeNewScanModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeNewScanModal();
+});
+
+async function submitNewScan() {
+  const target   = document.getElementById('f-target').value.trim();
+  const mode     = document.getElementById('f-mode').value;
+  const loginUrl = document.getElementById('f-login-url').value.trim();
+  const username = document.getElementById('f-username').value.trim();
+  const password = document.getElementById('f-password').value;
+
+  if (!target) {
+    document.getElementById('f-target').style.borderColor = 'var(--critical)';
+    return;
+  }
+  document.getElementById('f-target').style.borderColor = '';
+
+  closeNewScanModal();
+
+  try {
+    const r = await fetch('/api/scans', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({target, scan_mode: mode, login_url: loginUrl, username, password}),
+    });
+    const d = await r.json();
+    if (d.scan_id) {
+      await loadScans();
+      selectScan(d.scan_id);
+    }
+  } catch(e) {
+    alert('Error starting scan: ' + e);
+  }
+
+  // Reset form
+  document.getElementById('f-target').value    = '';
+  document.getElementById('f-login-url').value = '';
+  document.getElementById('f-username').value  = '';
+  document.getElementById('f-password').value  = '';
+}
+
+// ─── Utils ─────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

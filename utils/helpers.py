@@ -182,6 +182,31 @@ def sanitize_filename(name: str) -> str:
     return re.sub(r'[^\w\-_.]', '_', name)
 
 
+def setup_output_dir(hostname: str, base_dir: str = None) -> str:
+    """
+    Create and return a timestamped output directory for a scan session.
+    Structure: output/<hostname>_<timestamp>/
+    """
+    import os
+    if base_dir is None:
+        base_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output")
+    safe_host = sanitize_filename(hostname)
+    folder_name = f"{safe_host}_{get_filename_timestamp()}"
+    output_dir = os.path.join(base_dir, folder_name)
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(os.path.join(output_dir, "loot"), exist_ok=True)
+    return output_dir
+
+
+def save_session_snapshot(session_dict: dict, output_dir: str) -> str:
+    """Save incremental JSON snapshot of the scan session to output dir."""
+    import json, os
+    path = os.path.join(output_dir, "session.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(session_dict, f, indent=2, default=str)
+    return path
+
+
 def format_size(bytes_size: int) -> str:
     """Format bytes to human-readable size."""
     for unit in ['B', 'KB', 'MB', 'GB']:

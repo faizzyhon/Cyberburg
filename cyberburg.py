@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CYBERBURG v2.0.0 — PHANTOM BLADE                        ║
+║                    CYBERBURG v4.0.0 — DARK MATTER                          ║
 ║          Advanced Web Penetration Testing & Vulnerability Scanner           ║
 ║                                                                              ║
 ║   Developer : Faiz Zyhon                                                    ║
@@ -45,7 +45,8 @@ from utils.banner import print_banner, print_section, print_info, print_success,
 from utils.tool_checker import display_tool_status, get_available_tools, check_tool
 from utils.helpers import (
     normalize_target, is_valid_target, get_timestamp,
-    get_filename_timestamp, severity_score, risk_rating
+    get_filename_timestamp, severity_score, risk_rating,
+    setup_output_dir, save_session_snapshot
 )
 
 console = Console()
@@ -55,7 +56,7 @@ console = Console()
 class ScanSession:
     """Holds all scan results for a target."""
 
-    def __init__(self, target: str):
+    def __init__(self, target: str, output_dir: str = None):
         self.target = target
         url, hostname, ip = normalize_target(target)
         self.url = url
@@ -64,9 +65,12 @@ class ScanSession:
         self.start_time = get_timestamp()
         self.end_time = None
         self.modules = []
+        self.output_dir = output_dir or setup_output_dir(hostname)
 
     def add_result(self, result: dict):
         self.modules.append(result)
+        # Auto-save snapshot after every module
+        save_session_snapshot(self.to_dict(), self.output_dir)
 
     def all_findings(self):
         findings = []
@@ -254,20 +258,33 @@ def interactive_menu():
     print_banner()
 
     while True:
-        console.print("\n[bold cyan]╔══════════════════════════════════════════╗[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]         [bold white]CYBERBURG MAIN MENU[/bold white]               [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]╠══════════════════════════════════════════╣[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]1.[/bold green]  Full Scan (All Modules)              [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]2.[/bold green]  Quick Scan (Recon + Web + Ports)     [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]3.[/bold green]  Stealth Scan                         [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]4.[/bold green]  Custom Scan (Select Modules)         [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]5.[/bold green]  Web Vulnerability Only               [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]6.[/bold green]  SSL/TLS Analysis Only                [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]7.[/bold green]  Reconnaissance Only                  [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]8.[/bold green]  Check Tool Availability              [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold green]9.[/bold green]  View Previous Reports                [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]  [bold red]0.[/bold red]  Exit                                 [bold cyan]║[/bold cyan]")
-        console.print("[bold cyan]╚══════════════════════════════════════════╝[/bold cyan]")
+        console.print("\n[bold cyan]╔═════════════════════════════════════════════╗[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]        [bold white]CYBERBURG v4 — DARK MATTER[/bold white]          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]1.[/bold green]   Full Scan (All Modules)               [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]2.[/bold green]   Quick Scan (Recon + Web + Ports)      [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]3.[/bold green]   Stealth Scan                          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]4.[/bold green]   Custom Scan (Select Modules)          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]5.[/bold green]   Web Vulnerability Only                [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]6.[/bold green]   SSL/TLS Analysis Only                 [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]7.[/bold green]   Reconnaissance Only                   [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]8.[/bold green]   Authentication Testing                [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]11.[/bold red]  Exploit Mode (v3 Auto Attacks)        [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold magenta]12.[/bold magenta]  Data Harvesting (v3 Secrets & Loot)  [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]13.[/bold red]  GOD MODE — Elite Attack Chain (v4)   [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold yellow]14.[/bold yellow]  CVE Intelligence Lookup (v4)         [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold cyan]15.[/bold cyan]  AI Analysis — Claude Expert (v4)     [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]16.[/bold green]  Screenshot Capture (v4)              [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]17.[/bold red]  Metasploit Integration (v4)          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]9.[/bold green]   Check Tool Availability               [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold green]10.[/bold green]  View Previous Reports                 [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold yellow]O.[/bold yellow]   Open Output Folder                   [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold yellow]K.[/bold yellow]   Configure AI API Key                 [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold magenta]D.[/bold magenta]   Launch Web Dashboard (localhost)      [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]0.[/bold red]   Exit                                  [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]╚═════════════════════════════════════════════╝[/bold cyan]")
 
         choice = Prompt.ask("\n[bold yellow]  ◆ Select option[/bold yellow]", default="1")
 
@@ -275,12 +292,35 @@ def interactive_menu():
             console.print("\n[bold red]Exiting Cyberburg. Stay ethical![/bold red]")
             sys.exit(0)
 
-        elif choice == "8":
-            display_tool_status()
+        elif choice == "D" or choice == "d":
+            console.print("\n[bold magenta]  Launching Cyberburg Dashboard...[/bold magenta]")
+            console.print("  [dim]Open http://localhost:5000 in your browser[/dim]")
+            try:
+                import subprocess, sys
+                dashboard_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "start_dashboard.py")
+                subprocess.Popen([sys.executable, dashboard_script], cwd=os.path.dirname(os.path.abspath(__file__)))
+                time.sleep(1.5)
+                import webbrowser
+                webbrowser.open("http://localhost:5000")
+            except Exception as e:
+                print_error(f"Dashboard error: {e}")
             continue
 
         elif choice == "9":
+            display_tool_status()
+            continue
+
+        elif choice == "10":
             _view_reports()
+            continue
+
+        elif choice == "O" or choice == "o":
+            _open_output_folder()
+            continue
+
+        elif choice == "K" or choice == "k":
+            from modules.ai_analyst import configure_api_key
+            configure_api_key()
             continue
 
         # Get target for scan options
@@ -321,6 +361,22 @@ def interactive_menu():
                 run_ssl_scan(session)
             elif choice == "7":
                 run_recon(session)
+            elif choice == "8":
+                _run_auth(session)
+            elif choice == "11":
+                _run_exploit_mode(session)
+            elif choice == "12":
+                _run_data_harvest(session)
+            elif choice == "13":
+                _run_god_mode(session)
+            elif choice == "14":
+                _run_cve_lookup(session)
+            elif choice == "15":
+                _run_ai_analysis(session)
+            elif choice == "16":
+                _run_screenshot(session)
+            elif choice == "17":
+                _run_metasploit(session)
 
             # Print summary
             console.print()
@@ -341,6 +397,7 @@ def interactive_menu():
                 generate_reports(session)
 
         console.print(f"\n[dim]  Session complete. {len(session.all_findings())} total findings.[/dim]")
+        console.print(f"[bold green]  Output saved to: {session.output_dir}[/bold green]")
 
 
 def _full_scan(session: ScanSession):
@@ -394,15 +451,18 @@ def _custom_scan(session: ScanSession):
     console.print("\n[bold cyan]Select modules to run:[/bold cyan]")
 
     modules = {
-        "1": ("Reconnaissance (WHOIS, DNS, Subdomains)", lambda: run_recon(session)),
-        "2": ("Port Scan — Quick", lambda: run_port_scan(session, "quick")),
-        "3": ("Port Scan — Full (all 65535 ports)", lambda: run_port_scan(session, "full")),
-        "4": ("SSL/TLS Analysis", lambda: run_ssl_scan(session)),
-        "5": ("Web Vulnerability Scan (Nikto, WhatWeb, Headers)", lambda: run_web_scan(session)),
-        "6": ("SQL Injection Testing", lambda: _run_sqli(session)),
-        "7": ("XSS Testing", lambda: _run_xss(session)),
-        "8": ("Directory Bruteforce", lambda: _run_dirbust(session)),
-        "9": ("Nuclei Template Scan", lambda: _run_nuclei(session)),
+        "1":  ("Reconnaissance (WHOIS, DNS, Subdomains)", lambda: run_recon(session)),
+        "2":  ("Port Scan — Quick", lambda: run_port_scan(session, "quick")),
+        "3":  ("Port Scan — Full (all 65535 ports)", lambda: run_port_scan(session, "full")),
+        "4":  ("SSL/TLS Analysis", lambda: run_ssl_scan(session)),
+        "5":  ("Web Vulnerability Scan (Nikto, WhatWeb, Headers)", lambda: run_web_scan(session)),
+        "6":  ("SQL Injection Testing", lambda: _run_sqli(session)),
+        "7":  ("XSS Testing", lambda: _run_xss(session)),
+        "8":  ("Directory Bruteforce", lambda: _run_dirbust(session)),
+        "9":  ("Nuclei Template Scan", lambda: _run_nuclei(session)),
+        "10": ("Authentication Testing (Login/Default Creds)", lambda: _run_auth(session)),
+        "11": ("[v3] Exploit Mode — Automated Attacks", lambda: _run_exploit_mode(session)),
+        "12": ("[v3] Data Harvesting — Secrets & Loot", lambda: _run_data_harvest(session)),
     }
 
     for key, (name, _) in modules.items():
@@ -447,6 +507,122 @@ def _run_nuclei(session):
     session.add_result(nuclei_cves(session.url))
 
 
+def _run_god_mode(session: ScanSession):
+    """Run the elite 12-vector attack chain."""
+    from modules.god_mode import run_god_mode
+    run_god_mode(session, session.output_dir)
+    crits = [f for f in session.all_findings() if f.get("severity") == "CRITICAL"]
+    if crits:
+        from modules.bug_bounty_report import create_bug_bounty_report
+        bb_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bug_bounty_reports")
+        os.makedirs(bb_dir, exist_ok=True)
+        bb_path = create_bug_bounty_report(
+            f"godmode_{session.hostname}", session.target, crits, bb_dir
+        )
+        console.print(f"\n[bold red]  Bug Bounty report: {bb_path}[/bold red]")
+
+
+def _run_cve_lookup(session: ScanSession):
+    """Run CVE intelligence lookup against detected technologies."""
+    from modules.cve_lookup import run_cve_lookup
+    result = run_cve_lookup(session, session.output_dir)
+    session.add_result(result)
+
+
+def _run_ai_analysis(session: ScanSession):
+    """Run Claude AI expert analysis on all findings."""
+    from modules.ai_analyst import run_ai_analysis
+    result = run_ai_analysis(session, session.output_dir)
+    session.add_result(result)
+
+
+def _run_screenshot(session: ScanSession):
+    """Capture screenshots of discovered pages."""
+    from modules.screenshot import run_screenshot_capture
+    result = run_screenshot_capture(session, session.output_dir)
+    session.add_result(result)
+
+
+def _run_metasploit(session: ScanSession):
+    """Generate Metasploit resource script and display run instructions."""
+    from modules.metasploit_integration import run_metasploit_integration
+    result = run_metasploit_integration(session, session.output_dir)
+    session.add_result(result)
+
+
+def _run_exploit_mode(session: ScanSession):
+    """Run automated exploitation engine."""
+    from modules.exploit_engine import run_exploit_mode
+    run_exploit_mode(session, session.output_dir)
+
+    crits = [f for f in session.all_findings() if f.get("severity") == "CRITICAL"]
+    if crits:
+        from modules.bug_bounty_report import create_bug_bounty_report
+        bb_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bug_bounty_reports")
+        os.makedirs(bb_dir, exist_ok=True)
+        bb_path = create_bug_bounty_report(
+            f"exploit_{session.hostname}", session.target, crits, bb_dir
+        )
+        console.print(f"\n[bold red]  🚨 Bug Bounty report generated: {bb_path}[/bold red]")
+
+
+def _run_data_harvest(session: ScanSession):
+    """Run data harvesting module."""
+    from modules.data_harvester import run_data_harvest
+    run_data_harvest(session, session.output_dir)
+
+
+def _open_output_folder():
+    """Open the output folder in the file manager."""
+    import subprocess
+    output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    os.makedirs(output_dir, exist_ok=True)
+    console.print(f"\n[bold yellow]  Output folder: {output_dir}[/bold yellow]")
+    try:
+        if os.name == "nt":
+            subprocess.Popen(["explorer", output_dir])
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", output_dir])
+        else:
+            subprocess.Popen(["xdg-open", output_dir])
+    except Exception as e:
+        print_warning(f"Could not open folder automatically: {e}")
+
+
+def _run_auth(session, login_url: str = None, username: str = None, password: str = None):
+    """Run authentication testing module."""
+    from modules.auth_tester import run_auth_tests
+    if not login_url:
+        login_url = Prompt.ask(
+            "\n  [bold cyan]  Login URL[/bold cyan] [dim](leave blank for auto-detect)[/dim]",
+            default=""
+        ).strip() or None
+    if not username:
+        username = Prompt.ask(
+            "  [bold cyan]  Username / Email[/bold cyan] [dim](optional — leave blank to skip)[/dim]",
+            default=""
+        ).strip() or None
+    if username and not password:
+        from rich.prompt import Prompt as P
+        import getpass
+        password = getpass.getpass("  Password: ").strip() or None
+
+    result = run_auth_tests(session.url, login_url, username, password)
+    session.add_result(result.to_module_dict())
+
+    # Auto-generate bug bounty report if critical findings found
+    crits = [f for f in result.findings if f.get("severity") == "CRITICAL"]
+    if crits:
+        from modules.bug_bounty_report import create_bug_bounty_report
+        bb_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bug_bounty_reports")
+        os.makedirs(bb_dir, exist_ok=True)
+        bb_path = create_bug_bounty_report(
+            f"cli_{session.hostname}", session.target, result.findings, bb_dir
+        )
+        console.print(f"\n[bold red]  🚨 CRITICAL ALERT: Bug Bounty report generated:[/bold red]")
+        console.print(f"  [bold white]{bb_path}[/bold white]")
+
+
 def _view_reports():
     """List and open previous reports."""
     reports_dir = "reports"
@@ -488,15 +664,22 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 cyberburg.py                          # Interactive menu
-  python3 cyberburg.py -t example.com           # Full scan
-  python3 cyberburg.py -t example.com --quick   # Quick scan
-  python3 cyberburg.py -t example.com --recon   # Recon only
-  python3 cyberburg.py -t example.com --web     # Web scan only
-  python3 cyberburg.py -t example.com --ssl     # SSL only
-  python3 cyberburg.py -t example.com --vuln    # Vuln scan only
-  python3 cyberburg.py -t example.com --stealth # Stealth scan
-  python3 cyberburg.py --tools                  # Check tools
+  python3 cyberburg.py                           # Interactive menu
+  python3 cyberburg.py -t example.com            # Full scan
+  python3 cyberburg.py -t example.com --quick    # Quick scan
+  python3 cyberburg.py -t example.com --recon    # Recon only
+  python3 cyberburg.py -t example.com --web      # Web scan only
+  python3 cyberburg.py -t example.com --ssl      # SSL only
+  python3 cyberburg.py -t example.com --vuln     # Vuln scan only
+  python3 cyberburg.py -t example.com --stealth  # Stealth scan
+  python3 cyberburg.py -t example.com --exploit    # [v3] Automated attacks
+  python3 cyberburg.py -t example.com --harvest    # [v3] Data harvesting
+  python3 cyberburg.py -t example.com --god-mode   # [v4] Elite attack chain
+  python3 cyberburg.py -t example.com --cve        # [v4] CVE intelligence
+  python3 cyberburg.py -t example.com --ai         # [v4] Claude AI analysis
+  python3 cyberburg.py -t example.com --screenshot # [v4] Screenshots
+  python3 cyberburg.py -t example.com --msf        # [v4] Metasploit .rc script
+  python3 cyberburg.py --tools                     # Check tools
 
 Developer: Faiz Zyhon | github.com/faizzyhon | faizzyhon.online
         """
@@ -511,10 +694,22 @@ Developer: Faiz Zyhon | github.com/faizzyhon | faizzyhon.online
     parser.add_argument("--ssl", action="store_true", help="SSL/TLS analysis only")
     parser.add_argument("--vuln", action="store_true", help="Vulnerability scan only")
     parser.add_argument("--ports", action="store_true", help="Port scan only")
+    parser.add_argument("--auth", action="store_true", help="Authentication testing only")
+    parser.add_argument("--login-url", help="Login page URL for auth testing")
+    parser.add_argument("--username", help="Username/email for auth testing")
+    parser.add_argument("--password", help="Password for auth testing")
+    parser.add_argument("--exploit", action="store_true", help="[v3] Automated exploitation mode")
+    parser.add_argument("--harvest", action="store_true", help="[v3] Data harvesting mode (JS secrets, configs, git)")
+    parser.add_argument("--god-mode", action="store_true", help="[v4] Elite 12-vector attack chain")
+    parser.add_argument("--cve", action="store_true", help="[v4] CVE intelligence lookup")
+    parser.add_argument("--ai", action="store_true", help="[v4] Claude AI expert analysis")
+    parser.add_argument("--screenshot", action="store_true", help="[v4] Screenshot capture")
+    parser.add_argument("--msf", action="store_true", help="[v4] Metasploit resource script generation")
     parser.add_argument("--tools", action="store_true", help="Check available tools")
+    parser.add_argument("--dashboard", action="store_true", help="Launch web dashboard on localhost:5000")
     parser.add_argument("--no-report", action="store_true", help="Skip report generation")
-    parser.add_argument("-o", "--output", help="Custom output directory for reports")
-    parser.add_argument("--version", action="version", version="Cyberburg v2.0.0 — PHANTOM BLADE")
+    parser.add_argument("-o", "--output", help="Custom output directory")
+    parser.add_argument("--version", action="version", version="Cyberburg v4.0.0 — DARK MATTER")
 
     return parser.parse_args()
 
@@ -535,6 +730,15 @@ def main():
         display_tool_status()
         return
 
+    # Launch dashboard
+    if args.dashboard:
+        try:
+            from start_dashboard import main as dashboard_main
+            dashboard_main()
+        except ImportError:
+            print_error("Dashboard not available. Run: pip install flask")
+        return
+
     # No arguments = interactive mode
     if not args.target:
         interactive_menu()
@@ -548,13 +752,21 @@ def main():
         print_error(f"Invalid target: {target}")
         sys.exit(1)
 
-    session = ScanSession(target)
+    output_dir = setup_output_dir(normalize_target(target)[1], args.output) if args.output else None
+    session = ScanSession(target, output_dir)
     console.print(f"\n[bold green]  [+] Target: {session.url}[/bold green]")
-    console.print(f"  [dim]IP: {session.ip} | Start: {session.start_time}[/dim]\n")
+    console.print(f"  [dim]IP: {session.ip} | Start: {session.start_time}[/dim]")
+    console.print(f"  [dim]Output: {session.output_dir}[/dim]\n")
 
     try:
-        if args.full or (not any([args.quick, args.stealth, args.recon, args.web, args.ssl, args.vuln, args.ports])):
+        has_mode = any([args.quick, args.stealth, args.recon, args.web,
+                        args.ssl, args.vuln, args.ports, args.auth,
+                        args.exploit, args.harvest,
+                        args.god_mode, args.cve, args.ai, args.screenshot, args.msf])
+        if args.full or not has_mode:
             _full_scan(session)
+            if args.login_url or args.username:
+                _run_auth(session, args.login_url, args.username, args.password)
         elif args.quick:
             _quick_scan(session)
         elif args.stealth:
@@ -570,6 +782,22 @@ def main():
             run_vuln_scan(session)
         elif args.ports:
             run_port_scan(session, mode="full")
+        elif args.auth:
+            _run_auth(session, args.login_url, args.username, args.password)
+        elif args.exploit:
+            _run_exploit_mode(session)
+        elif args.harvest:
+            _run_data_harvest(session)
+        elif args.god_mode:
+            _run_god_mode(session)
+        elif args.cve:
+            _run_cve_lookup(session)
+        elif args.ai:
+            _run_ai_analysis(session)
+        elif args.screenshot:
+            _run_screenshot(session)
+        elif args.msf:
+            _run_metasploit(session)
 
         # Summary
         console.print()
@@ -581,6 +809,8 @@ def main():
             console.print(f"\n[bold green]  Reports generated:[/bold green]")
             for fmt, path in reports.items():
                 console.print(f"  [{fmt.upper()}] {path}")
+
+        console.print(f"\n[bold green]  All output saved to: {session.output_dir}[/bold green]")
 
     except KeyboardInterrupt:
         print_warning("\nScan interrupted")
