@@ -112,7 +112,8 @@ def harvest_js_secrets(url: str, output_dir: str) -> dict:
     for js_url in list(js_urls)[:30]:  # Cap at 30 files
         try:
             r = session.get(js_url, timeout=8, verify=False)
-            if r.status_code != 200 or "text" not in r.headers.get("content-type", ""):
+            ct = r.headers.get("content-type", "")
+            if r.status_code != 200 or not any(t in ct for t in ("javascript", "text/", "ecmascript")):
                 continue
             content = r.text
 
@@ -237,9 +238,10 @@ def harvest_config_files(url: str, output_dir: str) -> dict:
                 content = r.text
 
                 # Check if it's a real file (not a redirect/error page)
+                # Note: do NOT include "<html" — phpinfo.php and similar valid files output HTML
                 is_error = any(kw in content.lower() for kw in
                                ("404 not found", "page not found", "error 404",
-                                "<html", "not found</title>"))
+                                "not found</title>"))
                 if is_error and len(content) > 5000:
                     continue
 
@@ -428,39 +430,49 @@ def harvest_backup_files(url: str, output_dir: str) -> dict:
     for path in backup_targets:
         try:
             r = session.get(base + path, timeout=6, verify=False, stream=True)
-            if r.status_code == 200:
-                content_type = r.headers.get("content-type", "")
-                content_length = int(r.headers.get("content-length", 0))
+            if r.status_code != 200:
+                continue
 
-                # Skip if it's clearly an HTML error page
-                if "text/html" in content_type and content_length > 5000:
-                    first_chunk = next(r.iter_content(1024), b"")
-                    if b"404" in first_chunk or b"Not Found" in first_chunk:
-                        continue
+            content_type = r.headers.get("content-type", "")
+            # Read first chunk to detect HTML error pages before committing to download
+            first_chunk = next(r.iter_content(4096), b"")
+            if not first_chunk:
+                continue
 
-                sev = "CRITICAL" if any(ext in path for ext in (".sql", ".zip", ".tar", "history", "passwd")) else "HIGH"
+            # Skip HTML error pages (soft 404s)
+            if b"text/html" in content_type.encode() or b"<html" in first_chunk[:200].lower():
+                if any(kw in first_chunk.lower() for kw in (b"404", b"not found", b"page not found")):
+                    continue
+
+            # Determine total size from header (may be absent — 0 means unknown)
+            content_length = int(r.headers.get("content-length", 0))
+
+            sev = "CRITICAL" if any(ext in path for ext in (".sql", ".zip", ".tar", "history", "passwd")) else "HIGH"
+            size_label = f"{content_length} bytes" if content_length else "size unknown"
+            result["findings"].append({
+                "type": "Backup File Exposed",
+                "value": f"{base + path} ({size_label}, {content_type})",
+                "severity": sev
+            })
+            print_error(f"{sev}: Backup file found: {path} ({size_label})")
+            found += 1
+
+            # Save if not oversized (skip if known > 5 MB)
+            if content_length == 0 or content_length < 5_000_000:
+                fname = sanitize_filename(path.lstrip("/")) or sanitize_filename(path)
+                loot_path = os.path.join(loot_dir, fname)
+                with open(loot_path, "wb") as f:
+                    # Write the already-read first chunk first, then continue streaming
+                    f.write(first_chunk)
+                    for chunk in r.iter_content(8192):
+                        f.write(chunk)
+                result["loot"].append(loot_path)
+            else:
                 result["findings"].append({
-                    "type": "Backup File Exposed",
-                    "value": f"{base + path} ({content_length} bytes, {content_type})",
+                    "type": "Large Backup (Not Downloaded)",
+                    "value": f"{base + path} too large to auto-download ({content_length // 1048576} MB)",
                     "severity": sev
                 })
-                print_error(f"{sev}: Backup file found: {path} ({content_length} bytes)")
-                found += 1
-
-                # Save small files, note large ones
-                if content_length < 5_000_000:  # < 5MB
-                    fname = sanitize_filename(path.lstrip("/"))
-                    loot_path = os.path.join(loot_dir, fname)
-                    with open(loot_path, "wb") as f:
-                        for chunk in r.iter_content(8192):
-                            f.write(chunk)
-                    result["loot"].append(loot_path)
-                else:
-                    result["findings"].append({
-                        "type": "Large Backup (Not Downloaded)",
-                        "value": f"{base + path} is too large to auto-download ({content_length // 1048576}MB)",
-                        "severity": sev
-                    })
 
         except Exception:
             continue

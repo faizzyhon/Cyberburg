@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CYBERBURG v4.0.0 — DARK MATTER                          ║
+║                  CYBERBURG v5.0.0 — PHANTOM PROTOCOL                       ║
 ║          Advanced Web Penetration Testing & Vulnerability Scanner           ║
 ║                                                                              ║
 ║   Developer : Faiz Zyhon                                                    ║
@@ -218,8 +218,8 @@ def run_vuln_scan(session: ScanSession):
     session.add_result(manual_path_check(session.url))
     session.add_result(api_fuzzing(session.url))
 
-    # Injection
-    session.add_result(sqlmap_quick(session.url))
+    # Injection — pass output_dir so loot is saved inside session folder
+    session.add_result(sqlmap_quick(session.url, session.output_dir))
     session.add_result(manual_sqli_test(session.url))
 
     # XSS
@@ -259,7 +259,7 @@ def interactive_menu():
 
     while True:
         console.print("\n[bold cyan]╔═════════════════════════════════════════════╗[/bold cyan]")
-        console.print("[bold cyan]║[/bold cyan]        [bold white]CYBERBURG v4 — DARK MATTER[/bold white]          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]      [bold white]CYBERBURG v5 — PHANTOM PROTOCOL[/bold white]        [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold green]1.[/bold green]   Full Scan (All Modules)               [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold green]2.[/bold green]   Quick Scan (Recon + Web + Ports)      [bold cyan]║[/bold cyan]")
@@ -277,6 +277,12 @@ def interactive_menu():
         console.print("[bold cyan]║[/bold cyan]  [bold cyan]15.[/bold cyan]  AI Analysis — Claude Expert (v4)     [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold green]16.[/bold green]  Screenshot Capture (v4)              [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold red]17.[/bold red]  Metasploit Integration (v4)          [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold blue]18.[/bold blue]  Network Mapper — CIDR Scan (v5)      [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold yellow]19.[/bold yellow]  API Security Tester (v5)             [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold magenta]20.[/bold magenta]  WAF Bypass Engine (v5)               [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]21.[/bold red]  Threat Intelligence (v5)             [bold cyan]║[/bold cyan]")
+        console.print("[bold cyan]║[/bold cyan]  [bold red]22.[/bold red]  Password Auditor (v5)                [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]╠═════════════════════════════════════════════╣[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold green]9.[/bold green]   Check Tool Availability               [bold cyan]║[/bold cyan]")
         console.print("[bold cyan]║[/bold cyan]  [bold green]10.[/bold green]  View Previous Reports                 [bold cyan]║[/bold cyan]")
@@ -377,6 +383,16 @@ def interactive_menu():
                 _run_screenshot(session)
             elif choice == "17":
                 _run_metasploit(session)
+            elif choice == "18":
+                _run_network_mapper(session)
+            elif choice == "19":
+                _run_api_tester(session)
+            elif choice == "20":
+                _run_waf_bypass(session)
+            elif choice == "21":
+                _run_threat_intel(session)
+            elif choice == "22":
+                _run_password_auditor(session)
 
             # Print summary
             console.print()
@@ -463,6 +479,16 @@ def _custom_scan(session: ScanSession):
         "10": ("Authentication Testing (Login/Default Creds)", lambda: _run_auth(session)),
         "11": ("[v3] Exploit Mode — Automated Attacks", lambda: _run_exploit_mode(session)),
         "12": ("[v3] Data Harvesting — Secrets & Loot", lambda: _run_data_harvest(session)),
+        "13": ("[v4] GOD MODE — Elite Attack Chain", lambda: _run_god_mode(session)),
+        "14": ("[v4] CVE Intelligence Lookup", lambda: _run_cve_lookup(session)),
+        "15": ("[v4] AI Analysis — Claude Expert", lambda: _run_ai_analysis(session)),
+        "16": ("[v4] Screenshot Capture", lambda: _run_screenshot(session)),
+        "17": ("[v4] Metasploit Integration", lambda: _run_metasploit(session)),
+        "18": ("[v5] Network Mapper — CIDR Scan", lambda: _run_network_mapper(session)),
+        "19": ("[v5] API Security Tester", lambda: _run_api_tester(session)),
+        "20": ("[v5] WAF Bypass Engine", lambda: _run_waf_bypass(session)),
+        "21": ("[v5] Threat Intelligence", lambda: _run_threat_intel(session)),
+        "22": ("[v5] Password Auditor", lambda: _run_password_auditor(session)),
     }
 
     for key, (name, _) in modules.items():
@@ -484,7 +510,7 @@ def _custom_scan(session: ScanSession):
 
 def _run_sqli(session):
     from modules.sql_injection import sqlmap_quick, manual_sqli_test
-    session.add_result(sqlmap_quick(session.url))
+    session.add_result(sqlmap_quick(session.url, session.output_dir))
     session.add_result(manual_sqli_test(session.url))
 
 
@@ -550,6 +576,36 @@ def _run_metasploit(session: ScanSession):
     session.add_result(result)
 
 
+def _run_network_mapper(session: ScanSession):
+    """Run CIDR range network mapping."""
+    from modules.network_mapper import run_network_mapper
+    run_network_mapper(session, session.output_dir)
+
+
+def _run_api_tester(session: ScanSession):
+    """Run REST/GraphQL API security tests."""
+    from modules.api_tester import run_api_tester
+    run_api_tester(session, session.output_dir)
+
+
+def _run_waf_bypass(session: ScanSession):
+    """Run WAF bypass engine."""
+    from modules.waf_bypass import run_waf_bypass
+    run_waf_bypass(session, session.output_dir)
+
+
+def _run_threat_intel(session: ScanSession):
+    """Run threat intelligence sweep."""
+    from modules.threat_intel import run_threat_intel
+    run_threat_intel(session, session.output_dir)
+
+
+def _run_password_auditor(session: ScanSession):
+    """Run password audit: hash cracking, spray, default creds."""
+    from modules.password_auditor import run_password_auditor
+    run_password_auditor(session, session.output_dir)
+
+
 def _run_exploit_mode(session: ScanSession):
     """Run automated exploitation engine."""
     from modules.exploit_engine import run_exploit_mode
@@ -603,7 +659,6 @@ def _run_auth(session, login_url: str = None, username: str = None, password: st
             default=""
         ).strip() or None
     if username and not password:
-        from rich.prompt import Prompt as P
         import getpass
         password = getpass.getpass("  Password: ").strip() or None
 
@@ -624,33 +679,41 @@ def _run_auth(session, login_url: str = None, username: str = None, password: st
 
 
 def _view_reports():
-    """List and open previous reports."""
-    reports_dir = "reports"
-    if not os.path.isdir(reports_dir):
-        print_warning("No reports directory found")
+    """List reports from output/ and legacy reports/ directories."""
+    base = os.path.dirname(os.path.abspath(__file__))
+    search_dirs = [
+        os.path.join(base, "output"),
+        os.path.join(base, "reports"),
+    ]
+
+    all_files = []
+    for search_dir in search_dirs:
+        if not os.path.isdir(search_dir):
+            continue
+        for root, _, filenames in os.walk(search_dir):
+            for fname in filenames:
+                if fname.endswith(('.html', '.json', '.txt')):
+                    all_files.append(os.path.join(root, fname))
+
+    if not all_files:
+        print_warning("No reports found in output/ or reports/")
         return
 
-    files = sorted(
-        [f for f in os.listdir(reports_dir) if f.endswith(('.html', '.json', '.txt'))],
-        reverse=True
-    )
-
-    if not files:
-        print_warning("No reports found in ./reports/")
-        return
+    # Sort by modification time, newest first
+    all_files.sort(key=lambda p: os.path.getmtime(p), reverse=True)
 
     table = Table(title="Previous Reports", box=box.SIMPLE, show_header=True, header_style="bold cyan")
     table.add_column("#", width=4)
-    table.add_column("Filename", style="cyan")
+    table.add_column("Path", style="cyan")
     table.add_column("Size", width=10)
     table.add_column("Modified", width=20)
 
-    for i, fname in enumerate(files[:20], 1):
-        fpath = os.path.join(reports_dir, fname)
+    for i, fpath in enumerate(all_files[:30], 1):
+        rel = os.path.relpath(fpath, base)
         size = os.path.getsize(fpath)
         mtime = datetime.fromtimestamp(os.path.getmtime(fpath)).strftime("%Y-%m-%d %H:%M")
         size_str = f"{size//1024} KB" if size > 1024 else f"{size} B"
-        table.add_row(str(i), fname, size_str, mtime)
+        table.add_row(str(i), rel, size_str, mtime)
 
     console.print(table)
 
@@ -679,6 +742,11 @@ Examples:
   python3 cyberburg.py -t example.com --ai         # [v4] Claude AI analysis
   python3 cyberburg.py -t example.com --screenshot # [v4] Screenshots
   python3 cyberburg.py -t example.com --msf        # [v4] Metasploit .rc script
+  python3 cyberburg.py -t example.com --network    # [v5] Network/CIDR mapping
+  python3 cyberburg.py -t example.com --api        # [v5] API security tests
+  python3 cyberburg.py -t example.com --waf-bypass # [v5] WAF bypass engine
+  python3 cyberburg.py -t example.com --threat     # [v5] Threat intelligence
+  python3 cyberburg.py -t example.com --passwords  # [v5] Password auditor
   python3 cyberburg.py --tools                     # Check tools
 
 Developer: Faiz Zyhon | github.com/faizzyhon | faizzyhon.online
@@ -705,11 +773,16 @@ Developer: Faiz Zyhon | github.com/faizzyhon | faizzyhon.online
     parser.add_argument("--ai", action="store_true", help="[v4] Claude AI expert analysis")
     parser.add_argument("--screenshot", action="store_true", help="[v4] Screenshot capture")
     parser.add_argument("--msf", action="store_true", help="[v4] Metasploit resource script generation")
+    parser.add_argument("--network", action="store_true", help="[v5] Network/CIDR range mapping")
+    parser.add_argument("--api", action="store_true", help="[v5] REST/GraphQL API security testing")
+    parser.add_argument("--waf-bypass", action="store_true", help="[v5] WAF bypass engine")
+    parser.add_argument("--threat", action="store_true", help="[v5] Threat intelligence (IP rep, crt.sh, Shodan)")
+    parser.add_argument("--passwords", action="store_true", help="[v5] Password auditor (hashes, spray, default creds)")
     parser.add_argument("--tools", action="store_true", help="Check available tools")
     parser.add_argument("--dashboard", action="store_true", help="Launch web dashboard on localhost:5000")
     parser.add_argument("--no-report", action="store_true", help="Skip report generation")
     parser.add_argument("-o", "--output", help="Custom output directory")
-    parser.add_argument("--version", action="version", version="Cyberburg v4.0.0 — DARK MATTER")
+    parser.add_argument("--version", action="version", version="Cyberburg v5.0.0 — PHANTOM PROTOCOL")
 
     return parser.parse_args()
 
@@ -762,7 +835,8 @@ def main():
         has_mode = any([args.quick, args.stealth, args.recon, args.web,
                         args.ssl, args.vuln, args.ports, args.auth,
                         args.exploit, args.harvest,
-                        args.god_mode, args.cve, args.ai, args.screenshot, args.msf])
+                        args.god_mode, args.cve, args.ai, args.screenshot, args.msf,
+                        args.network, args.api, args.waf_bypass, args.threat, args.passwords])
         if args.full or not has_mode:
             _full_scan(session)
             if args.login_url or args.username:
@@ -798,6 +872,16 @@ def main():
             _run_screenshot(session)
         elif args.msf:
             _run_metasploit(session)
+        elif args.network:
+            _run_network_mapper(session)
+        elif args.api:
+            _run_api_tester(session)
+        elif args.waf_bypass:
+            _run_waf_bypass(session)
+        elif args.threat:
+            _run_threat_intel(session)
+        elif args.passwords:
+            _run_password_auditor(session)
 
         # Summary
         console.print()

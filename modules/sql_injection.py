@@ -3,8 +3,10 @@ SQL Injection Module — Cyberburg
 Handles: SQLMap integration with various injection methods
 """
 
+import os
 import re
-from utils.helpers import run_command, get_timestamp
+import tempfile
+from utils.helpers import run_command, get_timestamp, sanitize_filename
 from utils.tool_checker import check_tool
 from utils.banner import print_info, print_success, print_warning, print_error
 from rich.console import Console
@@ -12,7 +14,17 @@ from rich.console import Console
 console = Console()
 
 
-def sqlmap_quick(target: str) -> dict:
+def _sqlmap_output_dir(output_dir: str, subfolder: str) -> str:
+    """Return a sqlmap output sub-dir inside the session output folder."""
+    if output_dir:
+        d = os.path.join(output_dir, "loot", subfolder)
+    else:
+        d = os.path.join(tempfile.gettempdir(), "cyberburg", subfolder)
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+def sqlmap_quick(target: str, output_dir: str = None) -> dict:
     """Quick SQLMap scan on target URL."""
     result = {
         "module": "SQL Injection Scan (Quick)",
@@ -20,7 +32,8 @@ def sqlmap_quick(target: str) -> dict:
         "timestamp": get_timestamp(),
         "raw": "",
         "vulnerable": False,
-        "findings": []
+        "findings": [],
+        "loot": []
     }
 
     if not check_tool("sqlmap"):
@@ -28,17 +41,18 @@ def sqlmap_quick(target: str) -> dict:
         return result
 
     print_info(f"Running SQLMap quick scan on {target}...")
+    sqlmap_dir = _sqlmap_output_dir(output_dir, "sqlmap_quick")
 
     code, stdout, stderr = run_command(
         [
             "sqlmap", "-u", target,
-            "--batch",              # Non-interactive
+            "--batch",
             "--level", "2",
             "--risk", "1",
             "--timeout", "10",
             "--retries", "2",
-            "--output-dir", "/tmp/cyberburg_sqlmap",
-            "--forms",              # Test forms
+            "--output-dir", sqlmap_dir,
+            "--forms",
             "--crawl", "1",
             "--random-agent",
             "--no-cast",
@@ -46,12 +60,20 @@ def sqlmap_quick(target: str) -> dict:
         timeout=300
     )
 
-    result["raw"] = stdout + stderr
-    result = _parse_sqlmap_output(stdout + stderr, result)
+    combined = stdout + stderr
+    result["raw"] = combined
+    result = _parse_sqlmap_output(combined, result)
+
+    # Save raw output to loot
+    raw_path = os.path.join(sqlmap_dir, "sqlmap_quick_output.txt")
+    with open(raw_path, "w", encoding="utf-8", errors="replace") as f:
+        f.write(combined)
+    result["loot"].append(raw_path)
+
     return result
 
 
-def sqlmap_full(target: str) -> dict:
+def sqlmap_full(target: str, output_dir: str = None) -> dict:
     """Full SQLMap scan with all techniques."""
     result = {
         "module": "SQL Injection Scan (Full)",
@@ -59,7 +81,8 @@ def sqlmap_full(target: str) -> dict:
         "timestamp": get_timestamp(),
         "raw": "",
         "vulnerable": False,
-        "findings": []
+        "findings": [],
+        "loot": []
     }
 
     if not check_tool("sqlmap"):
@@ -67,6 +90,7 @@ def sqlmap_full(target: str) -> dict:
         return result
 
     print_info(f"Running SQLMap FULL scan on {target} (this may take a while)...")
+    sqlmap_dir = _sqlmap_output_dir(output_dir, "sqlmap_full")
 
     code, stdout, stderr = run_command(
         [
@@ -74,38 +98,46 @@ def sqlmap_full(target: str) -> dict:
             "--batch",
             "--level", "5",
             "--risk", "3",
-            "--technique", "BEUSTQ",   # All techniques
+            "--technique", "BEUSTQ",
             "--forms",
             "--crawl", "3",
             "--random-agent",
-            "--dbs",                   # Try to enumerate databases
+            "--dbs",
             "--tamper", "space2comment,between,randomcase",
-            "--output-dir", "/tmp/cyberburg_sqlmap_full",
+            "--output-dir", sqlmap_dir,
             "--timeout", "15",
         ],
         timeout=600
     )
 
-    result["raw"] = stdout + stderr
-    result = _parse_sqlmap_output(stdout + stderr, result)
+    combined = stdout + stderr
+    result["raw"] = combined
+    result = _parse_sqlmap_output(combined, result)
 
-    # Try to dump if vulnerable
+    # Save output
+    raw_path = os.path.join(sqlmap_dir, "sqlmap_full_output.txt")
+    with open(raw_path, "w", encoding="utf-8", errors="replace") as f:
+        f.write(combined)
+    result["loot"].append(raw_path)
+
+    # Try DB enumeration if vulnerable
     if result["vulnerable"]:
         print_warning("SQL injection confirmed — attempting database enumeration...")
+        dump_dir = _sqlmap_output_dir(output_dir, "sqlmap_dbs")
         code2, stdout2, _ = run_command(
             [
                 "sqlmap", "-u", target,
                 "--batch", "--dbs",
                 "--level", "3", "--risk", "2",
                 "--random-agent",
-                "--output-dir", "/tmp/cyberburg_sqlmap_dump",
+                "--output-dir", dump_dir,
             ],
             timeout=300
         )
         result["raw"] += f"\n=== DB Enumeration ===\n{stdout2}"
 
-        # Extract DB names
-        dbs = re.findall(r'\[\*\]\s+(\w+)', stdout2)
+        # Fixed: \w+ → [\w\-]+ to handle hyphenated DB names
+        dbs = re.findall(r'\[\*\]\s+([\w\-]+)', stdout2)
         for db in dbs:
             result["findings"].append({
                 "type": "Database Enumerated",
@@ -113,10 +145,15 @@ def sqlmap_full(target: str) -> dict:
                 "severity": "CRITICAL"
             })
 
+        db_path = os.path.join(dump_dir, "databases.txt")
+        with open(db_path, "w", encoding="utf-8", errors="replace") as f:
+            f.write(stdout2)
+        result["loot"].append(db_path)
+
     return result
 
 
-def sqlmap_post(target: str, data: str) -> dict:
+def sqlmap_post(target: str, data: str, output_dir: str = None) -> dict:
     """SQLMap scan on POST data."""
     result = {
         "module": "SQL Injection (POST)",
@@ -124,7 +161,8 @@ def sqlmap_post(target: str, data: str) -> dict:
         "timestamp": get_timestamp(),
         "raw": "",
         "vulnerable": False,
-        "findings": []
+        "findings": [],
+        "loot": []
     }
 
     if not check_tool("sqlmap"):
@@ -132,6 +170,7 @@ def sqlmap_post(target: str, data: str) -> dict:
         return result
 
     print_info(f"Testing POST parameters for SQL injection on {target}...")
+    sqlmap_dir = _sqlmap_output_dir(output_dir, "sqlmap_post")
 
     code, stdout, stderr = run_command(
         [
@@ -141,13 +180,20 @@ def sqlmap_post(target: str, data: str) -> dict:
             "--level", "3",
             "--risk", "2",
             "--random-agent",
-            "--output-dir", "/tmp/cyberburg_sqlmap_post",
+            "--output-dir", sqlmap_dir,
         ],
         timeout=300
     )
 
-    result["raw"] = stdout + stderr
-    result = _parse_sqlmap_output(stdout + stderr, result)
+    combined = stdout + stderr
+    result["raw"] = combined
+    result = _parse_sqlmap_output(combined, result)
+
+    raw_path = os.path.join(sqlmap_dir, "sqlmap_post_output.txt")
+    with open(raw_path, "w", encoding="utf-8", errors="replace") as f:
+        f.write(combined)
+    result["loot"].append(raw_path)
+
     return result
 
 
