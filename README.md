@@ -1,4 +1,4 @@
-# 🔥 CYBERBURG — Advanced Web Penetration Testing Suite
+# CYBERBURG — Advanced Web Penetration Testing Suite
 
 <div align="center">
 
@@ -11,12 +11,14 @@
  ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝
 ```
 
-**Version 2.0.0 — PHANTOM BLADE**
+**Version 5.0.0 — PHANTOM PROTOCOL**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Linux](https://img.shields.io/badge/Platform-Linux-orange.svg)](https://linux.org)
+[![Linux](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-orange.svg)](https://linux.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-faizzyhon-red.svg)](https://github.com/faizzyhon)
+[![Modules](https://img.shields.io/badge/Modules-22-brightgreen.svg)](#)
+[![Tools](https://img.shields.io/badge/Tools-40%2B-blue.svg)](#)
 
 *The ultimate all-in-one web penetration testing framework for professional pentesters*
 
@@ -26,107 +28,102 @@
 
 ---
 
-> ⚠️ **LEGAL DISCLAIMER**: Cyberburg is designed for **authorized penetration testing, security research, and educational purposes ONLY**. Using this tool against systems you do not have explicit written permission to test is **illegal** and punishable under computer crime laws (CFAA, Computer Misuse Act, etc.). The developer assumes **zero liability** for any misuse. Always obtain **written authorization** before testing any system.
+> **LEGAL DISCLAIMER**: Cyberburg is designed for **authorized penetration testing, security research, and educational purposes ONLY**. Using this tool against systems you do not have explicit written permission to test is **illegal** and punishable under computer crime laws (CFAA, Computer Misuse Act, etc.). The developer assumes **zero liability** for any misuse. Always obtain **written authorization** before testing any system.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [What is Cyberburg?](#what-is-cyberburg)
-2. [Features](#features)
-3. [Architecture](#architecture)
-4. [System Requirements](#system-requirements)
-5. [Installation](#installation)
-6. [Usage Guide](#usage-guide)
-7. [Scan Modes](#scan-modes)
-8. [Modules In Detail](#modules-in-detail)
-9. [Report System](#report-system)
-10. [Vulnerability Categories](#vulnerability-categories)
-11. [Attack Methodologies](#attack-methodologies)
-12. [Configuration](#configuration)
-13. [Wordlists & Payloads](#wordlists--payloads)
-14. [Output Formats](#output-formats)
-15. [Use Cases & Scenarios](#use-cases--scenarios)
-16. [Troubleshooting](#troubleshooting)
-17. [Contributing](#contributing)
-18. [Developer](#developer)
-19. [Changelog](#changelog)
+2. [Version History Overview](#version-history-overview)
+3. [Features at a Glance](#features-at-a-glance)
+4. [Architecture](#architecture)
+5. [System Requirements](#system-requirements)
+6. [Installation](#installation)
+7. [Usage Guide](#usage-guide)
+8. [Interactive Menu Reference](#interactive-menu-reference)
+9. [CLI Reference](#cli-reference)
+10. [Scan Modes (1–8)](#scan-modes-18)
+11. [v3 Modules — GHOST PROTOCOL](#v3-modules--ghost-protocol)
+12. [v4 Modules — DARK MATTER](#v4-modules--dark-matter)
+13. [v5 Modules — PHANTOM PROTOCOL](#v5-modules--phantom-protocol)
+14. [Output Folder System](#output-folder-system)
+15. [Report System](#report-system)
+16. [Threat Intelligence API Keys](#threat-intelligence-api-keys)
+17. [Attack Methodology](#attack-methodology)
+18. [Use Cases & Scenarios](#use-cases--scenarios)
+19. [Troubleshooting](#troubleshooting)
+20. [Developer](#developer)
+21. [Changelog](#changelog)
 
 ---
 
 ## What is Cyberburg?
 
-**Cyberburg** is a comprehensive Python-based Linux penetration testing framework that orchestrates **30+ professional security tools** under a single, beautiful terminal interface. Instead of switching between dozens of tools, memorizing their flags, and manually aggregating results, Cyberburg handles everything automatically — running tools in the right sequence, parsing their output, correlating findings, and generating professional PDF-quality HTML security reports.
+**Cyberburg** is a comprehensive Python-based penetration testing framework that orchestrates **40+ professional security tools** under a single, unified terminal interface. Instead of switching between dozens of tools, memorizing their flags, and manually aggregating results, Cyberburg handles everything automatically — running tools in the right sequence, parsing their output, correlating findings, and generating professional HTML security reports.
 
-### Why Cyberburg?
-
-| Problem | Cyberburg Solution |
-|---|---|
-| 30+ tools, 30+ different syntaxes | Unified interface, zero tool-switching |
-| Manual output parsing | Automated finding extraction & deduplication |
-| No correlation between tool results | Cross-module finding correlation |
-| No professional reports | 3 report formats: HTML, JSON, TXT |
-| Forget steps in methodology | Structured attack methodology per engagement type |
-| Inconsistent severity ratings | Standardized CRITICAL/HIGH/MEDIUM/LOW/INFO ratings |
+Starting from a basic web scanner (v1), Cyberburg has evolved through 5 major versions into a full-spectrum offensive security platform covering everything from passive OSINT to active exploitation, database dumping, AI-powered analysis, network-wide discovery, WAF evasion, and threat intelligence enrichment.
 
 ---
 
-## Features
+## Version History Overview
 
-### Core Capabilities
+| Version | Codename | Added |
+|---------|----------|-------|
+| v1.0.0 | Initial Release | 9 scan modes, 30+ tool integrations, HTML/JSON/TXT reports |
+| v2.0.0 | PHANTOM BLADE | Web dashboard, authentication tester, bug bounty report auto-generation |
+| v3.0.0 | GHOST PROTOCOL | Exploit engine (SQLi dump, admin takeover, LFI, CMDi, file upload), data harvester (JS secrets, config leaks, git exposure, backup files), organized output folder system |
+| v4.0.0 | DARK MATTER | God Mode 12-vector elite attack chain, CVE intelligence lookup, Claude AI expert analysis, screenshot capture, Metasploit resource script generation |
+| **v5.0.0** | **PHANTOM PROTOCOL** | **Network mapper (CIDR scan), API security tester, WAF bypass engine, threat intelligence (AbuseIPDB/Shodan/crt.sh), password auditor (hash cracking + spray)** |
+
+---
+
+## Features at a Glance
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  RECONNAISSANCE          │  PORT SCANNING & SERVICES               │
-│  ─────────────────────── │  ──────────────────────────────────────  │
-│  ✔ WHOIS Domain Intel    │  ✔ Quick Scan (Top 1000 ports)          │
-│  ✔ DNS Enumeration       │  ✔ Full Scan (All 65535 ports)          │
-│  ✔ Zone Transfer Testing │  ✔ Stealth SYN Scan                     │
-│  ✔ Subdomain Discovery   │  ✔ UDP Port Scan                        │
-│  ✔ Email Harvesting      │  ✔ Service Version Detection            │
-│  ✔ IP Geolocation        │  ✔ OS Fingerprinting                    │
-│  ✔ ASN Lookup            │  ✔ Firewall/IDS Detection               │
-│  ✔ theHarvester OSINT    │  ✔ Nmap Vuln Script Execution           │
-├─────────────────────────────────────────────────────────────────────┤
-│  WEB APPLICATION         │  VULNERABILITY SCANNING                 │
-│  ─────────────────────── │  ──────────────────────────────────────  │
-│  ✔ Nikto Web Scanner     │  ✔ SQL Injection (SQLMap + Manual)      │
-│  ✔ WhatWeb Fingerprint   │  ✔ XSS Testing (Dalfox + Manual)       │
-│  ✔ WAF Detection         │  ✔ DOM XSS Analysis                     │
-│  ✔ HTTP Methods Testing  │  ✔ Directory Bruteforce (Gobuster)      │
-│  ✔ Security Headers      │  ✔ File Enumeration (FFuf/Dirb)         │
-│  ✔ Cookie Analysis       │  ✔ Nuclei Template Scan                 │
-│  ✔ CMS Detection         │  ✔ CVE Detection (2000+ templates)      │
-│  ✔ robots.txt Analysis   │  ✔ Admin Panel Discovery                │
-├─────────────────────────────────────────────────────────────────────┤
-│  SSL/TLS ANALYSIS        │  REPORTING                              │
-│  ─────────────────────── │  ──────────────────────────────────────  │
-│  ✔ Certificate Analysis  │  ✔ Interactive HTML Report              │
-│  ✔ Protocol Support      │  ✔ JSON Machine-Readable Output         │
-│  ✔ Cipher Suite Testing  │  ✔ Plain Text Report                    │
-│  ✔ Heartbleed (CVE-2014) │  ✔ Severity-Based Finding Grouping     │
-│  ✔ POODLE Vulnerability  │  ✔ Security Score Card                  │
-│  ✔ Self-Signed Cert Check│  ✔ Auto Recommendations                 │
-│  ✔ Certificate Expiry    │  ✔ Attack Vector Documentation          │
-└─────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────┐
+│  CORE SCANNING (v1-v2)          │  EXPLOITATION (v3)                       │
+│  ─────────────────────────────  │  ──────────────────────────────────────  │
+│  WHOIS / DNS / Subdomains        │  SQLMap full DB dump                     │
+│  Port Scan (quick/full/stealth)  │  Admin panel default-cred takeover       │
+│  SSL/TLS complete analysis       │  LFI / Path Traversal exploitation       │
+│  WAF detection                   │  Command injection testing               │
+│  Security headers audit          │  File upload / webshell detection        │
+│  SQL injection (SQLMap+manual)   │  JS secrets & API key harvesting         │
+│  XSS (Dalfox+DOM+manual)        │  Config file exposure (.env, wp-config)  │
+│  Directory bruteforce            │  Git repo exposure & git-dumper          │
+│  Nuclei template scanning        │  Backup file detection & download        │
+│  Authentication testing          │  Sensitive endpoint discovery            │
+│  Bug Bounty report auto-gen      │  Organized output/<target>/ folder       │
+├────────────────────────────────────────────────────────────────────────────┤
+│  ELITE ATTACKS (v4)             │  PHANTOM PROTOCOL (v5) — NEW             │
+│  ─────────────────────────────  │  ──────────────────────────────────────  │
+│  GOD MODE: 12-vector chain       │  Network Mapper (CIDR/ARP/OS detect)    │
+│   SSRF cloud metadata            │  API Security Tester                     │
+│   XXE injection                  │   BOLA/IDOR numeric ID fuzzing           │
+│   IDOR numeric ID fuzzing        │   Mass assignment (isAdmin, role)        │
+│   JWT alg:none + HMAC brute      │   Rate limiting bypass check             │
+│   CORS misconfiguration          │   GraphQL introspection + injection      │
+│   Open redirect (16 params)      │   Sensitive data leak scan               │
+│   Host header injection          │  WAF Bypass Engine                       │
+│   HTTP verb tampering            │   8 encoding techniques (URL/hex/etc)    │
+│   Request smuggling probe        │   HTTP parameter pollution               │
+│   Business logic flaws           │   IP-spoofing header bypass              │
+│   Subdomain takeover check       │  Threat Intelligence                     │
+│   Prototype pollution            │   IP reputation (AbuseIPDB)              │
+│  CVE Intelligence (NVD API)      │   Certificate transparency (crt.sh)      │
+│  Claude AI expert analysis       │   Passive DNS (HackerTarget)             │
+│  Screenshot capture              │   Shodan InternetDB (free)               │
+│  Metasploit .rc script gen       │   DNS blacklist check (7 lists)          │
+│                                  │   VirusTotal (optional API key)          │
+│                                  │  Password Auditor                        │
+│                                  │   Hash extraction from findings          │
+│                                  │   John the Ripper / Hashcat integration  │
+│                                  │   150+ default credential pairs          │
+│                                  │   Password spray (slow, safe)            │
+│                                  │   Password policy weakness check         │
+└────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Integrated Tools (30+)
-
-| Category | Tools |
-|---|---|
-| **Network Scanning** | nmap (quick, full, stealth, UDP, vuln scripts) |
-| **Web Scanning** | nikto, whatweb, wafw00f |
-| **Subdomain Discovery** | subfinder, amass, sublist3r, theHarvester, dig brute |
-| **Directory Fuzzing** | gobuster, dirb, ffuf |
-| **SQL Injection** | sqlmap (all techniques), manual error testing |
-| **XSS** | dalfox, manual payload testing, DOM analysis |
-| **SSL/TLS** | sslscan, testssl.sh, openssl |
-| **CMS Scanning** | wpscan, manual Joomla/Drupal detection |
-| **Vulnerability Templates** | nuclei (2000+ templates), CVE scanning |
-| **OSINT** | theHarvester, whois, dig, dnsenum, fierce |
-| **Brute Force** | hydra |
-| **DNS** | dig, dnsenum, fierce, amass |
 
 ---
 
@@ -134,149 +131,128 @@
 
 ```
 cyberburg/
-├── cyberburg.py              # Main entry point & interactive menu
+├── cyberburg.py                    # Main entry point, interactive menu, CLI
+│
 ├── modules/
-│   ├── recon.py              # WHOIS, DNS, subdomains, email harvesting
-│   ├── port_scanner.py       # Nmap all scan modes
-│   ├── web_scanner.py        # Nikto, WhatWeb, WAF, headers, CMS
-│   ├── sql_injection.py      # SQLMap + manual SQLi testing
-│   ├── xss_scanner.py        # Dalfox + manual XSS + DOM XSS
-│   ├── dir_bruteforce.py     # Gobuster/Dirb/FFuf/manual paths
-│   ├── ssl_analyzer.py       # SSLScan/testssl/OpenSSL analysis
-│   ├── nuclei_scan.py        # Nuclei template scanning
-│   └── report_gen.py         # HTML/JSON/TXT report generation
+│   ├── recon.py                    # WHOIS, DNS, subdomains, email harvesting
+│   ├── port_scanner.py             # Nmap: quick/full/stealth/UDP/vuln/firewall
+│   ├── web_scanner.py              # Nikto, WhatWeb, WAF, headers, CMS, robots
+│   ├── ssl_analyzer.py             # SSLScan, testssl, OpenSSL, Heartbleed, POODLE
+│   ├── sql_injection.py            # SQLMap (quick/full/POST) + manual probing
+│   ├── xss_scanner.py              # Dalfox, DOM XSS, manual payloads
+│   ├── dir_bruteforce.py           # Gobuster/Dirb/FFuf, manual critical paths
+│   ├── nuclei_scan.py              # Nuclei CVE + panel + exposure templates
+│   ├── report_gen.py               # HTML/JSON/TXT report generation
+│   ├── auth_tester.py              # Login brute-force, default creds, MFA check [v2]
+│   ├── bug_bounty_report.py        # Auto bug bounty report on CRITICAL finds [v2]
+│   ├── exploit_engine.py           # SQLi dump, admin takeover, LFI, CMDi [v3]
+│   ├── data_harvester.py           # JS secrets, configs, git, backups, endpoints [v3]
+│   ├── god_mode.py                 # 12-vector elite attack chain [v4]
+│   ├── cve_lookup.py               # CVE intelligence + NVD API [v4]
+│   ├── ai_analyst.py               # Claude AI expert analysis [v4]
+│   ├── screenshot.py               # Headless screenshot capture [v4]
+│   ├── metasploit_integration.py   # Metasploit .rc resource script [v4]
+│   ├── network_mapper.py           # CIDR scan, ARP, OS fingerprint [v5]
+│   ├── api_tester.py               # REST/GraphQL API security [v5]
+│   ├── waf_bypass.py               # WAF evasion engine [v5]
+│   ├── threat_intel.py             # IP rep, crt.sh, Shodan, DNSBL [v5]
+│   └── password_auditor.py         # Hash cracking, spray, default creds [v5]
+│
 ├── utils/
-│   ├── banner.py             # ASCII art & terminal styling
-│   ├── tool_checker.py       # Tool availability detection
-│   └── helpers.py            # Utilities, parsers, validators
-├── reports/                  # Generated reports (auto-created)
-├── requirements.txt          # Python dependencies
-├── install.sh                # Automated installation script
-└── README.md                 # This file
+│   ├── banner.py                   # ASCII art & terminal styling
+│   ├── tool_checker.py             # Tool availability detection
+│   └── helpers.py                  # Utilities, parsers, validators, output_dir
+│
+├── dashboard/                      # Flask web dashboard [v2]
+├── templates/                      # HTML report templates
+├── wordlists/                      # Built-in wordlists
+├── output/                         # Auto-created scan output folders
+├── reports/                        # Generated reports
+├── bug_bounty_reports/             # Auto-generated bug bounty reports
+├── requirements.txt
+├── install.sh
+└── README.md
 ```
 
 ---
 
 ## System Requirements
 
-### Minimum Requirements
-
 | Component | Requirement |
-|---|---|
-| **OS** | Linux (Kali, Ubuntu, Debian, Parrot, Arch, Fedora) |
+|-----------|-------------|
+| **OS** | Linux (Kali, Ubuntu, Debian, Parrot) or Windows 10/11 |
 | **Python** | 3.8 or higher |
-| **RAM** | 2 GB (4 GB recommended for full scans) |
-| **Storage** | 500 MB free (more for SecLists wordlists) |
-| **Network** | Internet access for OSINT modules |
-| **Privileges** | Sudo/root for stealth scans, SYN scans |
+| **RAM** | 2 GB minimum (4 GB recommended for full scans) |
+| **Storage** | 1 GB free (more for wordlists and output) |
+| **Network** | Internet access for OSINT, CVE, and threat intel modules |
+| **Privileges** | Root/sudo required for stealth scans and ARP scanning |
 
-### Recommended Linux Distributions
+### Recommended Distributions
 
 ```
-✔ Kali Linux 2023+        (Best — most tools pre-installed)
-✔ Parrot Security OS      (Excellent for pentesting)
-✔ Ubuntu 20.04/22.04 LTS  (Good — install tools manually)
-✔ Debian 11+              (Good)
-✔ Arch Linux              (Advanced users)
-✔ Fedora / CentOS         (Supported)
+Kali Linux 2023+        — Best (most tools pre-installed)
+Parrot Security OS      — Excellent
+Ubuntu 20.04/22.04 LTS  — Good (install tools manually)
+Debian 11+              — Good
+Windows 10/11           — Supported (Python-only modules work fully)
 ```
 
 ---
 
 ## Installation
 
-### Method 1: Automated Install (Recommended)
+### Method 1: Automated Install (Linux, Recommended)
 
 ```bash
-# Clone the repository
 git clone https://github.com/faizzyhon/cyberburg.git
 cd cyberburg
-
-# Run the installer as root
 sudo bash install.sh
 ```
 
-The install script will automatically:
-- Detect your Linux distribution
-- Install all APT/DNF/Pacman packages
-- Install Python pip packages
-- Install Go-based tools (nuclei, subfinder, dalfox, etc.)
-- Download SecLists wordlists
-- Create a `cyberburg` command symlink
-- Verify all critical tools
+The script auto-installs all APT packages, Go tools, pip packages, and SecLists wordlists, then creates a `cyberburg` symlink.
 
-### Method 2: Manual Installation
-
-#### Step 1: Install Python dependencies
+### Method 2: Manual Install
 
 ```bash
-pip3 install rich requests
-```
+# 1. Python dependencies
+pip3 install rich requests flask beautifulsoup4 anthropic
 
-#### Step 2: Install core Linux tools (Kali/Ubuntu/Debian)
-
-```bash
-sudo apt update
+# 2. Core tools (Kali / Ubuntu / Debian)
 sudo apt install -y \
     nmap nikto sqlmap gobuster dirb ffuf wpscan sslscan whatweb \
     wafw00f whois dnsutils curl openssl hydra amass theharvester \
-    dnsenum wfuzz git golang-go python3-pip
-```
+    dnsenum wfuzz git golang-go arp-scan john hashcat
 
-#### Step 3: Install pip tools
-
-```bash
-pip3 install wafw00f sublist3r wfuzz dnspython fierce beautifulsoup4
-```
-
-#### Step 4: Install Go tools (optional but recommended)
-
-```bash
+# 3. Go tools
 export PATH="$PATH:$HOME/go/bin"
 go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-go install github.com/projectdiscovery/httpx/cmd/httpx@latest
 go install github.com/hahwul/dalfox/v2@latest
-go install github.com/tomnomnom/httprobe@latest
-go install github.com/tomnomnom/waybackurls@latest
-go install github.com/lc/gau/v2/cmd/gau@latest
-```
+go install github.com/OJ/gobuster/v3@latest
 
-#### Step 5: Install SecLists (wordlists)
-
-```bash
-# Via apt (Kali)
+# 4. SecLists wordlists
 sudo apt install seclists
+# or: sudo git clone --depth 1 https://github.com/danielmiessler/SecLists /usr/share/seclists
 
-# Or clone from GitHub
-sudo git clone --depth 1 https://github.com/danielmiessler/SecLists.git /usr/share/seclists
-```
-
-#### Step 6: Make executable
-
-```bash
+# 5. Make executable
 chmod +x cyberburg.py
-# Optional: add to PATH
 sudo ln -s $(pwd)/cyberburg.py /usr/local/bin/cyberburg
 ```
 
-### Method 3: Kali Linux (Everything Pre-Installed)
+### Method 3: Windows (Python modules only)
 
-```bash
-# On Kali, most tools are already installed
-git clone https://github.com/faizzyhon/cyberburg.git
-cd cyberburg
-pip3 install -r requirements.txt
-python3 cyberburg.py
+```cmd
+pip install rich requests flask beautifulsoup4 anthropic
+python cyberburg.py
 ```
+
+> On Windows, modules that wrap Linux CLI tools (nmap, sqlmap, gobuster, etc.) require those tools to be installed and in PATH. Pure-Python modules (data harvester, API tester, WAF bypass, threat intel, password auditor) work natively.
 
 ### Verify Installation
 
 ```bash
 python3 cyberburg.py --tools
 ```
-
-This displays a table showing which tools are available and which are missing.
 
 ---
 
@@ -288,26 +264,7 @@ This displays a table showing which tools are available and which are missing.
 python3 cyberburg.py
 ```
 
-This launches the interactive menu:
-
-```
-╔══════════════════════════════════════════╗
-║         CYBERBURG MAIN MENU              ║
-╠══════════════════════════════════════════╣
-║  1.  Full Scan (All Modules)             ║
-║  2.  Quick Scan (Recon + Web + Ports)    ║
-║  3.  Stealth Scan                        ║
-║  4.  Custom Scan (Select Modules)        ║
-║  5.  Web Vulnerability Only              ║
-║  6.  SSL/TLS Analysis Only              ║
-║  7.  Reconnaissance Only                 ║
-║  8.  Check Tool Availability             ║
-║  9.  View Previous Reports               ║
-║  0.  Exit                                ║
-╚══════════════════════════════════════════╝
-```
-
-### Command-Line Mode
+### CLI Mode
 
 ```bash
 # Full scan (all modules)
@@ -316,417 +273,474 @@ python3 cyberburg.py -t https://example.com
 # Quick scan
 python3 cyberburg.py -t example.com --quick
 
-# Reconnaissance only
+# Specific module
 python3 cyberburg.py -t example.com --recon
-
-# Web vulnerability scan
-python3 cyberburg.py -t https://example.com --web
-
-# SSL/TLS analysis
+python3 cyberburg.py -t example.com --web
 python3 cyberburg.py -t example.com --ssl
+python3 cyberburg.py -t example.com --vuln
+python3 cyberburg.py -t example.com --ports
+python3 cyberburg.py -t example.com --stealth
+python3 cyberburg.py -t example.com --auth
 
-# Stealth scan (bypass IDS/IPS)
-python3 cyberburg.py -t 192.168.1.1 --stealth
+# v3 modules
+python3 cyberburg.py -t example.com --exploit
+python3 cyberburg.py -t example.com --harvest
 
-# Vulnerability scan only
-python3 cyberburg.py -t https://example.com --vuln
+# v4 modules
+python3 cyberburg.py -t example.com --god-mode
+python3 cyberburg.py -t example.com --cve
+python3 cyberburg.py -t example.com --ai
+python3 cyberburg.py -t example.com --screenshot
+python3 cyberburg.py -t example.com --msf
 
-# Port scan only
-python3 cyberburg.py -t 10.0.0.1 --ports
+# v5 modules
+python3 cyberburg.py -t example.com --network
+python3 cyberburg.py -t example.com --api
+python3 cyberburg.py -t example.com --waf-bypass
+python3 cyberburg.py -t example.com --threat
+python3 cyberburg.py -t example.com --passwords
 
-# Check available tools
+# Utility
 python3 cyberburg.py --tools
-
-# Scan without generating reports
+python3 cyberburg.py --dashboard
 python3 cyberburg.py -t example.com --no-report
-```
-
-### Help
-
-```bash
-python3 cyberburg.py --help
-```
-
-Output:
-```
-usage: cyberburg [-h] [-t TARGET] [--full] [--quick] [--stealth]
-                 [--recon] [--web] [--ssl] [--vuln] [--ports]
-                 [--tools] [--no-report] [-o OUTPUT] [--version]
-
-Cyberburg — Advanced Web Penetration Testing Suite
-
-options:
-  -h, --help            show this help message and exit
-  -t, --target TARGET   Target URL, domain, or IP address
-  --full                Run full scan (all modules)
-  --quick               Quick scan (recon + ports + web)
-  --stealth             Stealth mode scan
-  --recon               Reconnaissance only
-  --web                 Web vulnerability scan only
-  --ssl                 SSL/TLS analysis only
-  --vuln                Vulnerability scan only
-  --ports               Port scan only
-  --tools               Check available tools
-  --no-report           Skip report generation
-  -o, --output OUTPUT   Custom output directory for reports
-  --version             show program's version number and exit
+python3 cyberburg.py -t example.com -o /custom/output/path
+python3 cyberburg.py --version
 ```
 
 ---
 
-## Scan Modes
+## Interactive Menu Reference
 
-### 1. Full Scan — All Modules
+```
+╔═════════════════════════════════════════════╗
+║      CYBERBURG v5 — PHANTOM PROTOCOL        ║
+╠═════════════════════════════════════════════╣
+║  1.   Full Scan (All Modules)               ║
+║  2.   Quick Scan (Recon + Web + Ports)      ║
+║  3.   Stealth Scan                          ║
+║  4.   Custom Scan (Select Modules)          ║
+║  5.   Web Vulnerability Only                ║
+║  6.   SSL/TLS Analysis Only                 ║
+║  7.   Reconnaissance Only                   ║
+║  8.   Authentication Testing                ║
+╠═════════════════════════════════════════════╣
+║  11.  Exploit Mode (v3 Auto Attacks)        ║
+║  12.  Data Harvesting (v3 Secrets & Loot)   ║
+║  13.  GOD MODE — Elite Attack Chain (v4)    ║
+║  14.  CVE Intelligence Lookup (v4)          ║
+║  15.  AI Analysis — Claude Expert (v4)      ║
+║  16.  Screenshot Capture (v4)               ║
+║  17.  Metasploit Integration (v4)           ║
+╠═════════════════════════════════════════════╣
+║  18.  Network Mapper — CIDR Scan (v5)       ║
+║  19.  API Security Tester (v5)              ║
+║  20.  WAF Bypass Engine (v5)                ║
+║  21.  Threat Intelligence (v5)              ║
+║  22.  Password Auditor (v5)                 ║
+╠═════════════════════════════════════════════╣
+║  9.   Check Tool Availability               ║
+║  10.  View Previous Reports                 ║
+║  O.   Open Output Folder                    ║
+║  K.   Configure AI API Key                  ║
+║  D.   Launch Web Dashboard (localhost)      ║
+║  0.   Exit                                  ║
+╚═════════════════════════════════════════════╝
+```
 
-**Duration**: 30 minutes — 2+ hours (target dependent)  
-**Use case**: Comprehensive security assessment, bug bounty, full pentest engagement
+### Custom Scan (Option 4)
 
-The Full Scan runs every single module in order:
+Option 4 lets you cherry-pick any combination of all 22 modules:
+
+```
+Enter selection: 1,2,5,14,21
+→ Runs: Recon + Quick Port Scan + Web Vuln + CVE Lookup + Threat Intel
+```
+
+---
+
+## CLI Reference
+
+| Flag | Version | Description |
+|------|---------|-------------|
+| `-t`, `--target` | v1 | Target URL, domain, or IP |
+| `--full` | v1 | Run all scan modules |
+| `--quick` | v1 | Recon + ports + web (fast) |
+| `--stealth` | v1 | Low-noise SYN scan mode |
+| `--recon` | v1 | Reconnaissance only |
+| `--web` | v1 | Web vulnerability scan |
+| `--ssl` | v1 | SSL/TLS analysis only |
+| `--vuln` | v1 | Vulnerability scan (SQLi, XSS, dirs, nuclei) |
+| `--ports` | v1 | Port scan only |
+| `--auth` | v2 | Authentication testing |
+| `--login-url` | v2 | Login page URL for auth testing |
+| `--username` | v2 | Username for auth testing |
+| `--password` | v2 | Password for auth testing |
+| `--exploit` | v3 | Automated exploitation (SQLi dump, LFI, CMDi) |
+| `--harvest` | v3 | Data harvesting (JS secrets, configs, git, backups) |
+| `--god-mode` | v4 | Elite 12-vector attack chain |
+| `--cve` | v4 | CVE intelligence lookup |
+| `--ai` | v4 | Claude AI expert analysis |
+| `--screenshot` | v4 | Screenshot all discovered pages |
+| `--msf` | v4 | Generate Metasploit .rc resource script |
+| `--network` | v5 | Network/CIDR range mapping |
+| `--api` | v5 | REST/GraphQL API security testing |
+| `--waf-bypass` | v5 | WAF bypass engine |
+| `--threat` | v5 | Threat intelligence sweep |
+| `--passwords` | v5 | Password auditor (hashes + spray) |
+| `--tools` | v1 | Check tool availability |
+| `--dashboard` | v2 | Launch web dashboard |
+| `--no-report` | v1 | Skip report generation |
+| `-o`, `--output` | v3 | Custom output directory |
+| `--version` | v1 | Show version |
+
+---
+
+## Scan Modes (1–8)
+
+### 1. Full Scan
+
+**Duration**: 30 min – 2+ hours | **Use case**: Full pentest engagement, bug bounty
+
+Runs all base modules in sequence:
 
 ```
 Phase 1: RECONNAISSANCE
-├── WHOIS lookup
-├── DNS enumeration (A, AAAA, MX, NS, TXT, SOA, CNAME)
-├── Zone transfer attempt (AXFR)
-├── SPF/DMARC email security check
-├── Subdomain enumeration (subfinder + amass + sublist3r + DNS brute)
-├── IP Geolocation & ASN mapping
-└── Email harvesting (theHarvester)
+  WHOIS → DNS (all record types + zone transfer) → Subdomain enum
+  → IP geolocation → Email harvesting
 
 Phase 2: PORT SCANNING
-├── Full port scan (all 65535 TCP ports)
-├── Service & version detection
-├── OS fingerprinting
-├── Nmap vulnerability scripts
-├── UDP scan (top 100)
-└── Firewall/IDS detection
+  Full scan (65535 ports) → Service version detection
+  → OS fingerprinting → Nmap vuln scripts → UDP scan → Firewall detection
 
-Phase 3: SSL/TLS ANALYSIS
-├── Certificate validity & expiry
-├── Certificate chain analysis
-├── Protocol support (SSLv2/3, TLS 1.0/1.1/1.2/1.3)
-├── Cipher suite analysis
-├── Heartbleed (CVE-2014-0160)
-└── POODLE (CVE-2014-3566)
+Phase 3: SSL/TLS
+  Certificate analysis → Protocol testing (SSLv2/3, TLS 1.0–1.3)
+  → Cipher suites → Heartbleed → POODLE
 
-Phase 4: WEB APPLICATION SCANNING
-├── Technology fingerprinting (WhatWeb)
-├── WAF detection (wafw00f)
-├── HTTP security headers audit
-├── Cookie security analysis
-├── HTTP methods testing (PUT/DELETE/TRACE)
-├── robots.txt & sitemap.xml analysis
-├── CMS detection & scanning (WordPress/Joomla/Drupal)
-└── Nikto web vulnerability scan
+Phase 4: WEB APPLICATION
+  WhatWeb → WAF detection → Security headers → Cookie flags
+  → HTTP methods → robots.txt → CMS scan → Nikto
 
 Phase 5: VULNERABILITY SCANNING
-├── Directory bruteforcing (Gobuster/FFuf/Dirb)
-├── Sensitive file enumeration (30+ critical paths)
-├── API endpoint discovery
-├── SQL injection testing (SQLMap + manual probing)
-├── XSS testing (Dalfox + manual payloads)
-├── DOM XSS source/sink analysis
-├── Nuclei template scan (2000+ templates)
-├── CVE scanning (Nuclei CVE templates)
-└── Admin panel discovery
+  Gobuster dir brute → Manual critical paths → API fuzzing
+  → SQLMap → Manual SQLi probes → Dalfox XSS → DOM XSS
+  → Nuclei CVE templates → Nuclei panel templates
 ```
 
 ### 2. Quick Scan
 
-**Duration**: 5–15 minutes  
-**Use case**: Initial assessment, quick vulnerability overview, CI/CD integration
+**Duration**: 5–15 min | **Use case**: Initial triage, CI/CD
 
-Runs: Recon → Quick Port Scan → SSL → Web App Scanning (no SQLi/XSS deep testing)
+Recon → Quick port scan (top 1000) → SSL → Web scan (no deep SQLi/XSS)
 
 ### 3. Stealth Scan
 
-**Duration**: 15–30 minutes  
-**Use case**: Evade IDS/IPS/WAF, minimize footprint
+**Duration**: 15–30 min | **Requires**: root/sudo
 
-```
-- SYN stealth scan with random decoys (-D RND:10)
-- Slower timing (-T3 instead of T4)
-- Limited request rate
-- Reduced scan aggressiveness
-- No brute-force modules
-```
-
-Requires **root privileges** for SYN scanning:
 ```bash
 sudo python3 cyberburg.py -t target.com --stealth
 ```
 
+Uses: SYN stealth scan, slow timing (-T3), random decoys, no brute force. Minimizes IDS/IPS detection.
+
 ### 4. Custom Scan
 
-Launch interactive menu and select option **4** to pick exactly which modules to run:
+Interactive module picker. Select any combination from all 22 available modules by number:
 
 ```
-1. Reconnaissance
-2. Port Scan — Quick
-3. Port Scan — Full
-4. SSL/TLS Analysis
-5. Web Vulnerability Scan
-6. SQL Injection Testing
-7. XSS Testing
-8. Directory Bruteforce
-9. Nuclei Template Scan
+Example: 1,5,6,7,19,21
+→ Recon + Web vuln + SQLi + XSS + API tester + Threat intel
 ```
 
-Example: select `1,2,6,7` to run Recon + Quick Port Scan + SQLi + XSS only.
+### 5. Web Vulnerability Only
 
----
+Web scanner + full vulnerability scan (SQLi, XSS, dirs, nuclei) — skips port scan and recon.
 
-## Modules In Detail
+### 6. SSL/TLS Analysis Only
 
-### Reconnaissance Module (`modules/recon.py`)
+Deep SSL/TLS analysis: certificates, protocols, ciphers, Heartbleed, POODLE.
 
-#### WHOIS Lookup
-Extracts registrar info, creation/expiry dates, registrant details, nameservers.
+### 7. Reconnaissance Only
+
+WHOIS, DNS, subdomain enumeration, IP geolocation, email harvesting — completely passive.
+
+### 8. Authentication Testing
+
+Discovers login panels → tests configurable credential pairs → checks MFA signals → checks lockout policy.
 
 ```bash
-# Behind the scenes:
-whois target.com
+# With known credentials
+python3 cyberburg.py -t https://example.com --auth \
+  --login-url https://example.com/login \
+  --username admin --password password123
 ```
-
-**Findings generated:**
-- Domain registrar
-- Creation/expiry dates (expired domains are flagged)
-- Registrant contact information
-- Nameserver configuration
-
-#### DNS Enumeration
-Queries all DNS record types and attempts zone transfer.
-
-**Records queried:** A, AAAA, MX, NS, TXT, SOA, CNAME, SRV
-
-**Security checks:**
-- Zone transfer (AXFR) — CRITICAL if allowed
-- SPF record presence — MEDIUM if missing
-- DMARC record presence — MEDIUM if missing
-
-#### Subdomain Enumeration
-Multi-source subdomain discovery:
-1. **subfinder** — passive API-based discovery
-2. **amass** — comprehensive passive enumeration
-3. **sublist3r** — search engine scraping
-4. **theHarvester** — multi-source OSINT
-5. **DNS brute force** — 40+ common subdomain names
-
-Results are deduplicated and reported.
-
-#### Email Harvesting
-Uses theHarvester with sources: google, bing, yahoo, duckduckgo, hackertarget, urlscan, crtsh
-
-Emails found can be used for password spraying assessment or social engineering risk evaluation.
 
 ---
 
-### Port Scanner Module (`modules/port_scanner.py`)
+## v3 Modules — GHOST PROTOCOL
 
-#### Dangerous Port Detection
-Automatically flags known dangerous/sensitive ports with risk severity:
+### 11. Exploit Mode (`--exploit`)
 
-| Port | Service | Risk |
-|---|---|---|
-| 21 | FTP | HIGH — plaintext credentials |
-| 22 | SSH | INFO — check brute force protection |
-| 23 | Telnet | CRITICAL — plaintext everything |
-| 445 | SMB | CRITICAL — EternalBlue/ransomware |
-| 3306 | MySQL | CRITICAL — database exposed |
-| 3389 | RDP | HIGH — BlueKeep risk |
-| 6379 | Redis | CRITICAL — usually no auth |
-| 9200 | Elasticsearch | CRITICAL — usually no auth |
-| 27017 | MongoDB | CRITICAL — usually no auth |
+Automated post-discovery exploitation chain:
 
-#### Outdated Software Detection
-Nmap version detection feeds into a database of vulnerable versions:
+| Sub-module | What it does |
+|-----------|--------------|
+| **SQLi DB Dump** | SQLMap full exploitation → enumerate DBs → find credential tables → dump to `loot/sqlmap_dump/` |
+| **Admin Takeover** | Discover admin panels → test 24 default credential pairs → save session cookies on success |
+| **LFI Exploit** | Test 14 path traversal payloads × 16 parameters → save extracted files (`/etc/passwd`, etc.) |
+| **Command Injection** | Test 10 CMDi payloads (reflected + blind timing) → confirm `uid=` output |
+| **File Upload** | Detect upload endpoints → test `.txt` and `.php` uploads → flag RCE |
 
-- vsftpd 2.3.4 → CRITICAL (backdoor)
-- Apache 2.4.49 → CRITICAL (path traversal CVE-2021-41773)
-- PHP 5.x → CRITICAL (EOL, unpatched CVEs)
-- OpenSSL 1.0.1 → CRITICAL (Heartbleed)
-- MySQL 5.0 → HIGH (EOL)
+All loot saved to `output/<target>/loot/`.
 
----
+Bug bounty report auto-generated when CRITICAL findings occur.
 
-### Web Scanner Module (`modules/web_scanner.py`)
+### 12. Data Harvesting (`--harvest`)
 
-#### Security Header Audit
-Checks for all OWASP-recommended security headers:
+Automated sensitive data collection:
 
-| Header | Missing Severity | Protection |
-|---|---|---|
-| Strict-Transport-Security | HIGH | Protocol downgrade attacks |
-| Content-Security-Policy | MEDIUM | XSS, injection attacks |
-| X-Frame-Options | MEDIUM | Clickjacking |
-| X-Content-Type-Options | MEDIUM | MIME sniffing |
-| Referrer-Policy | LOW | Information leakage |
-| Permissions-Policy | LOW | Browser feature abuse |
-
-Also scores information-disclosure headers:
-- `Server: Apache/2.4.52` → LOW (version disclosure)
-- `X-Powered-By: PHP/7.4.3` → LOW (technology disclosure)
-
-#### Cookie Security Analysis
-Every `Set-Cookie` header is checked for:
-- `HttpOnly` flag — missing = MEDIUM (JavaScript cookie theft)
-- `Secure` flag — missing = MEDIUM (cookie sent over HTTP)
-- `SameSite` attribute — missing = LOW (CSRF via cookie)
-
-#### WAF Detection
-Uses wafw00f + heuristic signature matching to detect:
-Cloudflare, Sucuri, Akamai, Imperva, ModSecurity, F5, Barracuda, AWS WAF, etc.
-
-If **no WAF is detected**: flagged as HIGH severity.
-
-#### HTTP Methods Testing
-Tests for enabled dangerous methods:
-- `PUT` — CRITICAL if file upload succeeds
-- `DELETE` — HIGH
-- `TRACE` — MEDIUM (XST attack)
-- `CONNECT` — HIGH (tunneling)
+| Sub-module | What it finds |
+|-----------|---------------|
+| **JS Secrets** | Crawls all JS files (page + 16 common paths) → extracts 20 secret types: AWS keys, GitHub tokens, Stripe keys, JWT, private keys, DB connection strings, etc. |
+| **Config Exposure** | Checks 30+ paths: `.env`, `wp-config.php`, `web.config`, `settings.py`, `docker-compose.yml`, `phpinfo.php`, etc. |
+| **Git Exposure** | Checks `.git/HEAD`, `.git/config`, `.svn/entries` → runs `git-dumper` if available |
+| **Backup Files** | Scans for `.zip`, `.sql`, `.tar.gz`, `.bak`, log files, `.bash_history` → downloads files < 5 MB |
+| **Sensitive Endpoints** | Probes `/graphql`, `/actuator/env`, `/swagger`, `/api/users`, Jolokia, debug endpoints |
 
 ---
 
-### SQL Injection Module (`modules/sql_injection.py`)
+## v4 Modules — DARK MATTER
 
-#### SQLMap Integration
-Runs SQLMap with configurable aggressiveness:
+### 13. GOD MODE (`--god-mode`)
 
-**Quick mode** (level 2, risk 1): Tests the most likely injection points quickly  
-**Full mode** (level 5, risk 3): Tests ALL parameters with ALL techniques
+Elite 12-vector attack chain executed sequentially:
 
-Techniques tested (BEUSTQ):
-- **B**oolean-based blind
-- **E**rror-based
-- **U**nion query-based
-- **S**tacked queries
-- **T**ime-based blind
-- **Q**uery/inline injection
-
-If vulnerability confirmed → automatically attempts database enumeration.
-
-#### Manual Error-Based Testing
-Even without sqlmap, Cyberburg tests common SQL error patterns with payloads:
 ```
-' → SQL syntax error?
-" → SQL syntax error?
-' OR 1=1-- → Auth bypass?
-1 UNION SELECT NULL-- → Union injection?
-1' AND SLEEP(3)-- → Time-based blind?
+1.  SSRF          → Cloud metadata (AWS/GCP/Azure), localhost, Redis, SMTP via gopher
+2.  XXE           → XML external entity injection on XML-accepting endpoints
+3.  IDOR          → Numeric ID fuzzing on 12 API resource paths
+4.  JWT Attacks   → alg:none bypass + HMAC brute-force (30 weak secrets)
+5.  CORS          → Arbitrary origin reflection + credentials flag check
+6.  Open Redirect → 16 redirect params × 5 payloads (javascript:, data:, //)
+7.  Host Header   → X-Forwarded-Host, X-Host, Forwarded injection
+8.  Verb Tamper   → TRACE/PUT/DELETE/PATCH on protected paths
+9.  Smuggling     → TE:CL / CL:TE probe via curl (desync detection)
+10. Business Logic → Negative values, int overflow, mass assignment PUT /api/profile
+11. Subdomain TKO → Dangling CNAME fingerprint check (12 providers)
+12. Proto Pollution → URL param + JSON body `__proto__` injection
 ```
 
-Detects 15+ SQL error signatures: MySQL, PostgreSQL, Oracle, MSSQL, SQLite, etc.
+Critical findings auto-generate a bug bounty report.
+
+### 14. CVE Intelligence (`--cve`)
+
+- Extracts detected technologies + versions from all prior scan results (20 patterns)
+- Checks offline CVE database (30+ CVEs across 10 technology families with CVSS scores)
+- Queries live NVD API (rate-limited, no key required)
+- Saves `loot/cve_report.json`
+
+### 15. AI Analysis (`--ai`)
+
+Claude AI (claude-sonnet-4-6) expert security analysis:
+
+- Executive summary for stakeholders
+- Risk assessment with business impact
+- Attack chain reconstruction from findings
+- Next recommended attack vectors
+- Remediation roadmap (prioritized)
+- Existing compromise detection from indicators
+
+**Setup API key:**
+```bash
+# Option 1: environment variable
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Option 2: interactive (menu option K)
+python3 cyberburg.py   # → press K
+
+# Option 3: key file
+echo "sk-ant-..." > ~/.cyberburg_api_key
+```
+
+Output saved to `loot/ai_analysis.md`.
+
+### 16. Screenshot Capture (`--screenshot`)
+
+Captures screenshots of: main target + all discovered admin panels + config file URLs + API endpoints.
+
+Uses (in order): `chromium --headless`, `wkhtmltoimage`, HTML snapshot fallback.
+
+Saved to `output/<target>/screenshots/`.
+
+### 17. Metasploit Integration (`--msf`)
+
+- Maps all findings to corresponding Metasploit modules (20+ mappings)
+- Auto-detects LHOST and target OS type
+- Generates `msfvenom` payload suggestions per OS
+- Outputs ready-to-run `.rc` resource script to `loot/<target>.rc`
+
+```bash
+# Run the generated script:
+msfconsole -r output/<target>/loot/<target>.rc
+```
 
 ---
 
-### XSS Scanner Module (`modules/xss_scanner.py`)
+## v5 Modules — PHANTOM PROTOCOL
 
-#### Dalfox Integration
-State-of-the-art XSS scanner with:
-- 20+ concurrent workers
-- DOM XSS detection
-- Reflected XSS with 500+ payloads
-- Blind XSS payload injection
-- Context-aware payload generation
+### 18. Network Mapper (`--network`)
 
-#### Manual XSS Probing
-Tests 21 hand-crafted payloads across 10 common parameter names:
-```html
-<script>alert(1)</script>
-<img src=x onerror=alert(1)>
-"><svg/onload=alert(1)>
-<details/open/ontoggle=alert(1)>
+Full network range discovery — prompts for CIDR (defaults to target IP /24):
+
+| Feature | Detail |
+|---------|--------|
+| **ARP Scan** | `arp-scan <cidr>` or nmap ARP ping fallback — discovers MAC + vendor |
+| **Ping Sweep** | Parallel ICMP sweep via `ThreadPoolExecutor` (64 workers, max /16) |
+| **Nmap Discovery** | `-sn --open` host discovery with MAC/vendor parsing |
+| **Service Sweep** | Top 100 ports across all discovered hosts (up to 50 hosts) |
+| **OS Fingerprint** | `nmap -O --osscan-guess` on first 5 live hosts |
+
+```bash
+python3 cyberburg.py -t 192.168.1.1 --network
+# Prompts: Enter CIDR range [192.168.1.0/24]:
 ```
 
-Verifies actual reflection in response body (not just parameter echo).
+Live hosts saved to `loot/live_hosts_<cidr>.txt`.
 
-#### DOM XSS Analysis
-Fetches page source + up to 10 linked JS files, then analyzes:
+### 19. API Security Tester (`--api`)
 
-**Sources checked** (user-controlled inputs):
-`document.URL`, `location.hash`, `location.search`, `window.name`, `document.referrer`
+Full REST and GraphQL API security audit:
 
-**Sinks checked** (dangerous output):
-`innerHTML`, `document.write`, `eval()`, `setTimeout()`, `jQuery.html()`
+| Test | Detail |
+|------|--------|
+| **Endpoint Discovery** | Probes 50 common API paths — saves list to `loot/api_endpoints.txt` |
+| **BOLA / IDOR** | IDs 1, 2, 3, 100, 999 on 11 resource paths — flags divergent 200 responses |
+| **Mass Assignment** | PUT with `isAdmin`, `role`, `privilege`, `verified`, `balance` etc. — flags reflection |
+| **Rate Limiting** | 20 rapid POST requests to auth endpoints — flags absence of 429 |
+| **GraphQL** | Introspection query → saves schema; injection payloads for user/password/isAdmin |
+| **Sensitive Data** | Scans 200-response bodies for API keys, passwords, SSN, credit cards, AWS keys |
 
-Source + Sink combination = potential DOM XSS (MEDIUM severity).
+### 20. WAF Bypass Engine (`--waf-bypass`)
+
+WAF detection + automated evasion testing:
+
+**Detected WAFs:** Cloudflare, AWS WAF, Akamai, Sucuri, ModSecurity, Imperva/Incapsula, F5 BIG-IP, Barracuda, Fortinet, Nginx NAXSI
+
+**8 Encoding Techniques:**
+
+| Technique | Example |
+|-----------|---------|
+| URL Encode | `%27%20OR%201%3D1--` |
+| Double URL Encode | `%2527%2520OR%25201%253D1--` |
+| HTML Entities | `&#39;&#32;OR&#32;1&#61;1--` |
+| Hex Encode | `%27%20%4f%52%20%31%3d%31%2d%2d` |
+| Case Mutation | `' Or 1=1--` |
+| SQL Comment Spaces | `'/**/OR/**/1=1--` |
+| Null Byte Suffix | `' OR 1=1--%00` |
+| Tab/Newline | `' OR\n1=1--` |
+
+Plus: HTTP Parameter Pollution + IP-spoofing header bypass (X-Forwarded-For, X-Real-IP, etc.)
+
+```bash
+python3 cyberburg.py -t https://example.com --waf-bypass
+# Prompts: Target GET parameter [id]:
+```
+
+Bypass results saved to `loot/waf_bypasses.json`.
+
+### 21. Threat Intelligence (`--threat`)
+
+Passive intelligence sweep using free + optional paid APIs:
+
+| Source | Key Required | What it provides |
+|--------|-------------|-----------------|
+| **ipinfo.io** | No | ISP, country, ASN, hostname |
+| **AbuseIPDB** | Optional (`ABUSEIPDB_API_KEY`) | Abuse confidence score, report count, usage type |
+| **crt.sh** | No | All subdomains from certificate transparency logs |
+| **HackerTarget** | No | Passive DNS — historical hostname → IP mappings |
+| **Shodan InternetDB** | No | Open ports, known CVEs, hostnames (free tier) |
+| **Shodan Full API** | Optional (`SHODAN_API_KEY`) | Full host details, OS, org, all CVEs with CVSS |
+| **DNSBL** | No | 7 blacklists: Spamhaus, SpamCop, SORBS, Barracuda, UCEProtect |
+| **VirusTotal** | Optional (`VIRUSTOTAL_API_KEY`) | Malicious/suspicious vendor flags |
+
+```bash
+# Set API keys (optional — all free-tier sources work without keys)
+export ABUSEIPDB_API_KEY=your_key
+export SHODAN_API_KEY=your_key
+export VIRUSTOTAL_API_KEY=your_key
+
+python3 cyberburg.py -t example.com --threat
+```
+
+### 22. Password Auditor (`--passwords`)
+
+Full password lifecycle audit:
+
+| Feature | Detail |
+|---------|--------|
+| **Hash Extraction** | Scans all session findings for hash patterns: MD5, SHA-1, SHA-256, SHA-512, bcrypt, NTLM, NetNTLMv2, MySQL |
+| **Hash Identification** | Identifies hash type automatically from format |
+| **John the Ripper** | Runs `john --wordlist=<rockyou>` against extracted hashes |
+| **Hashcat** | Runs with auto-detected mode if John finds nothing |
+| **Default Creds** | Tests 150+ pairs across: generic, web frameworks (WP/Joomla/Drupal), DBs (MySQL/MongoDB/Redis), CMS, network devices (Cisco/MikroTik/Ubiquiti), monitoring tools (Grafana/Zabbix/Nagios), container tools (Portainer/Proxmox) |
+| **Password Spray** | Slow spray (0.5s delay) with SPRAY_PASSWORDS list × provided usernames |
+| **Policy Check** | Tests registration endpoint with 3-char password — flags no minimum length |
+
+```bash
+python3 cyberburg.py -t https://example.com --passwords
+# Prompts:
+#   Login endpoint path [/login]:
+#   Usernames for spray (comma-separated, blank to skip):
+```
+
+CRITICAL finds auto-generate a bug bounty report.
 
 ---
 
-### SSL Analyzer Module (`modules/ssl_analyzer.py`)
+## Output Folder System
 
-#### Certificate Analysis
-- Expiry date: warns 30 days before, critical if expired
-- Self-signed detection: flagged HIGH
-- Certificate CN/SAN verification
-- Issuer chain validation
-
-#### Protocol Testing
-Tests each protocol via `openssl s_client`:
-- SSLv2 → CRITICAL if supported
-- SSLv3 → CRITICAL (POODLE)
-- TLS 1.0 → CRITICAL (deprecated since 2020)
-- TLS 1.1 → HIGH (deprecated)
-- TLS 1.2 → INFO (acceptable)
-- TLS 1.3 → INFO (ideal)
-
-#### Cipher Suite Analysis
-Flags weak ciphers: NULL, EXPORT, DES, RC4, MD5, 3DES, ANON
-
-#### Known Vulnerabilities
-- **Heartbleed** (CVE-2014-0160): Memory leak in OpenSSL TLS heartbeat
-- **POODLE** (CVE-2014-3566): SSLv3 padding oracle attack
-
-Both tested via dedicated Nmap scripts.
-
----
-
-### Nuclei Module (`modules/nuclei_scan.py`)
-
-Nuclei is template-based vulnerability scanner with 7000+ community templates.
-
-**What gets scanned:**
-- Known CVEs (2015-present)
-- Misconfigurations
-- Exposed credentials/config files
-- Default passwords
-- Admin panel exposures
-- Technology-specific vulnerabilities
-- Cloud service misconfigurations
-
-**Template categories used:**
-`cve`, `tech`, `panel`, `login`, `admin`, `exposure`, `misconfiguration`
-
----
-
-### Directory Bruteforce Module (`modules/dir_bruteforce.py`)
-
-#### Wordlist Priority
-Cyberburg automatically finds the best available wordlist:
+Every scan session creates an isolated folder under `output/`:
 
 ```
-1. /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
-2. /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-3. /usr/share/wordlists/dirb/common.txt
-4. Embedded 60-word critical paths list (fallback)
+output/
+└── example_com_20250418_143022/       ← auto-created per scan session
+    ├── session.json                   ← live snapshot (updated after each module)
+    ├── loot/
+    │   ├── sqlmap_quick/
+    │   │   └── sqlmap_quick_output.txt
+    │   ├── sqlmap_dump/
+    │   │   ├── dump_mydb_users.txt    ← dumped credentials
+    │   │   └── databases.txt
+    │   ├── js_secrets/
+    │   │   └── app.js_secrets.txt
+    │   ├── configs/
+    │   │   └── .env.txt               ← downloaded exposed config
+    │   ├── git_exposure/
+    │   │   └── .git_HEAD.txt
+    │   ├── backups/
+    │   │   └── backup.sql             ← downloaded backup file
+    │   ├── endpoints/
+    │   │   └── actuator_env.json
+    │   ├── screenshots/               ← from module 16
+    │   ├── api_endpoints.txt          ← from module 19
+    │   ├── waf_bypasses.json          ← from module 20
+    │   ├── crtsh_subdomains.txt       ← from module 21
+    │   ├── shodan_1_2_3_4.json
+    │   ├── extracted_hashes.txt       ← from module 22
+    │   ├── ai_analysis.md             ← from module 15
+    │   ├── cve_report.json            ← from module 14
+    │   └── <target>.rc                ← Metasploit script (module 17)
+    └── screenshots/
+        ├── main_page.png
+        └── admin_panel.png
+
+reports/
+└── cyberburg_example_com_20250418_143022.html   ← full HTML report
+bug_bounty_reports/
+└── exploit_example_com_20250418.html            ← auto-generated on CRITICAL
 ```
 
-#### Manual Critical Path Check
-Always checks 30+ high-value paths regardless of wordlist:
-
-```
-/.env                 — CRITICAL (credentials)
-/.git/config          — CRITICAL (source code)
-/wp-config.php        — CRITICAL (WordPress credentials)
-/phpinfo.php          — HIGH (server info disclosure)
-/phpmyadmin/          — HIGH (database admin panel)
-/backup.sql           — CRITICAL (database backup)
-/.htpasswd            — CRITICAL (plaintext passwords)
-/server-status        — HIGH (Apache status page)
-/api/v1/              — MEDIUM (API exposure)
-/graphql              — MEDIUM (GraphQL endpoint)
-```
+**Open output folder** from within the tool: press `O` in the main menu.
 
 ---
 
@@ -734,431 +748,276 @@ Always checks 30+ high-value paths regardless of wordlist:
 
 ### HTML Report
 
-The flagship report format — a professional, dark-themed HTML document with:
-
-**Executive Summary**
-- Target information
-- Risk rating (CRITICAL/HIGH/MEDIUM/LOW/INFO)
-- Scan timeline
-- Total finding counts
-
-**Visual Dashboard**
+Professional dark-themed report with:
+- Executive summary + risk rating banner (CRITICAL / HIGH / MEDIUM / LOW)
 - Doughnut chart (severity distribution)
-- Stat cards per severity level
-- Color-coded risk banner
-
-**Detailed Findings**
-- Grouped by scan module
-- Each finding shows: severity badge, finding type, description
-- Color-coded by severity (red=critical, orange=high, yellow=medium, cyan=low)
-
-**Attack Vectors Used**
-- Documents exactly which attack techniques were applied
-
-**Recommendations**
-- Automatically generated based on findings
-- Actionable remediation steps
-
-**Legal Footer**
-- Authorized testing disclaimer
-- Developer attribution
+- All findings grouped by module with severity badges
+- Auto-generated remediation recommendations
+- Attack vectors documentation
 
 ```bash
-# Open the report
-firefox reports/cyberburg_example.com_20240115_143022.html
+# View the report
+firefox output/<target>/reports/*.html
 ```
 
 ### JSON Report
 
-Machine-readable output for integration with ticketing systems, dashboards, etc.
+Machine-readable for integration with SIEM, ticketing systems, or dashboards:
 
 ```json
 {
-  "meta": {
-    "tool": "Cyberburg",
-    "version": "2.0.0",
-    "developer": "Faiz Zyhon",
-    "github": "github.com/faizzyhon"
-  },
+  "meta": { "tool": "Cyberburg", "version": "5.0.0" },
   "target": "https://example.com",
-  "risk_rating": "HIGH",
-  "summary": {
-    "CRITICAL": 2,
-    "HIGH": 8,
-    "MEDIUM": 15,
-    "LOW": 23,
-    "INFO": 47
-  },
+  "risk_rating": "CRITICAL",
+  "summary": { "CRITICAL": 3, "HIGH": 9, "MEDIUM": 12 },
   "findings": [
     {
-      "type": "SQL Injection Vulnerable Parameter",
-      "value": "Parameter 'id' is vulnerable to SQL injection",
-      "severity": "CRITICAL",
-      "module": "SQL Injection Scan (Quick)"
+      "type": "BOLA/IDOR",
+      "severity": "HIGH",
+      "url": "https://example.com/api/users/{id}",
+      "detail": "IDs 1 and 2 return 200 with different body sizes",
+      "module": "API Tester — BOLA/IDOR"
     }
   ]
 }
 ```
 
-### Text Report
+### Bug Bounty Reports
 
-Clean plaintext output suitable for:
-- Email attachments
-- Copying into ticketing systems
-- Terminal review
+Auto-generated HTML reports formatted for HackerOne / Bugcrowd submission when CRITICAL findings occur. Saved to `bug_bounty_reports/`.
 
 ---
 
-## Vulnerability Categories
+## Threat Intelligence API Keys
 
-### CRITICAL
-Immediate exploitation possible. Treat as P0 emergency.
-
-- SQL Injection with data extraction confirmed
-- Remote Code Execution
-- Exposed `.env` or config files with credentials
-- Zone transfer allowed (full DNS enumeration)
-- Default credentials accepted
-- Heartbleed / known critical CVEs
-- SSLv2/SSLv3 support enabled
-- Database directly exposed to internet (Redis, MongoDB, MySQL)
-
-### HIGH
-Significant risk. Fix within 24–72 hours.
-
-- XSS vulnerability confirmed
-- Dangerous ports exposed (SMB, RDP, Telnet)
-- Missing HSTS header
-- Outdated software (EOL versions)
-- Weak TLS 1.0/1.1 support
-- Admin panels accessible
-- Backup files exposed
-- No WAF protection
-
-### MEDIUM
-Moderate risk. Fix within 1–2 weeks.
-
-- Missing security headers (CSP, X-Frame-Options)
-- Cookie flags missing (HttpOnly, Secure)
-- Missing SPF/DMARC records
-- HTTP methods (TRACE enabled)
-- Directory listing enabled
-- Information disclosure headers
-
-### LOW
-Low exploitability but should be fixed.
-
-- Server version disclosure
-- Missing Referrer-Policy
-- Directory structure revealed via robots.txt
-- Minor SSL issues
-
-### INFO
-Informational findings with no immediate risk.
-
-- Technologies detected
-- Open ports (standard services)
-- DNS records
-- Subdomain inventory
-
----
-
-## Attack Methodologies
-
-### Web Application Pentest Methodology
-
-Cyberburg follows the OWASP Testing Guide and PTES methodology:
-
-```
-1. Information Gathering
-   ├── Passive: WHOIS, DNS, OSINT, subdomains
-   └── Active: Port scan, service detection, fingerprinting
-
-2. Configuration & Deployment Management
-   ├── HTTP methods testing
-   ├── Security headers audit
-   └── SSL/TLS configuration
-
-3. Authentication Testing
-   ├── Default credentials (Nuclei)
-   ├── Admin panel discovery
-   └── Login form analysis
-
-4. Authorization Testing
-   ├── HTTP method abuse (PUT/DELETE)
-   └── Directory traversal
-
-5. Session Management
-   └── Cookie security flags
-
-6. Input Validation
-   ├── SQL Injection
-   ├── Cross-Site Scripting (XSS)
-   └── DOM-based XSS
-
-7. Error Handling
-   └── SQL error messages
-   └── Verbose error pages
-
-8. Cryptography
-   └── SSL/TLS complete analysis
-
-9. Business Logic
-   └── Nuclei custom templates
-
-10. Client-Side Testing
-    ├── DOM XSS
-    └── eval() usage analysis
-```
-
----
-
-## Configuration
-
-### Environment Variables
+All threat intel works without API keys using free tiers. Keys unlock more data:
 
 ```bash
-# Customize scan behavior
-export CYBERBURG_TIMEOUT=300          # Default command timeout (seconds)
-export CYBERBURG_THREADS=50           # Gobuster/FFuf thread count
-export CYBERBURG_OUTPUT_DIR=~/reports # Custom reports directory
+# Add to ~/.bashrc or ~/.zshrc for persistence
+export ANTHROPIC_API_KEY=sk-ant-...        # Required for AI analysis (module 15)
+export ABUSEIPDB_API_KEY=...               # Full abuse score + report history
+export SHODAN_API_KEY=...                  # Full Shodan host data + all CVEs
+export VIRUSTOTAL_API_KEY=...             # VirusTotal domain/IP reputation
+
+# Or configure AI key interactively (stores in ~/.cyberburg_api_key)
+python3 cyberburg.py   # → press K
 ```
-
-### Custom Wordlists
-
-Place custom wordlists in any of these locations and Cyberburg will auto-detect them:
-
-```
-/usr/share/wordlists/dirb/common.txt
-/usr/share/seclists/Discovery/Web-Content/common.txt
-/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-```
-
-Or pass custom wordlist to gobuster manually and integrate via the modules.
 
 ---
 
-## Wordlists & Payloads
+## Attack Methodology
 
-### XSS Payloads (Built-in)
-21 carefully selected XSS payloads covering:
-- Basic script injection
-- HTML event handlers
-- SVG-based payloads
-- URL-encoded variants
-- Case-variation bypass
-- HTML entity encoding bypass
-- Comment-based bypass
+Cyberburg follows the OWASP Testing Guide v4, PTES, and OWASP API Security Top 10:
 
-### SQL Injection Payloads (Built-in)
-11 error-triggering SQLi payloads:
-- Basic quote injection
-- Boolean-based
-- Time-based
-- UNION-based
-- URL-encoded variants
-
-### Critical Paths (Built-in)
-30+ hardcoded sensitive paths always checked:
-Config files, git directories, backup files, admin panels, database dumps, etc.
-
----
-
-## Output Formats
-
-### Report File Naming
 ```
-reports/cyberburg_{target}_{timestamp}.html
-reports/cyberburg_{target}_{timestamp}.json
-reports/cyberburg_{target}_{timestamp}.txt
-```
+Phase 1 — Passive Intelligence
+  OSINT: WHOIS, DNS, subdomains, emails, certificate transparency,
+         passive DNS, IP reputation, Shodan, blacklist checks
 
-Example:
-```
-reports/cyberburg_example_com_20240115_143022.html
-reports/cyberburg_example_com_20240115_143022.json
-reports/cyberburg_example_com_20240115_143022.txt
-```
+Phase 2 — Active Discovery
+  Port scan, service fingerprint, OS detect, firewall probe,
+  web tech fingerprint, WAF detect, CMS detect, SSL/TLS audit
 
-### Directory Structure After Scan
-```
-reports/
-├── cyberburg_example_com_20240115_143022.html    ← Open in browser
-├── cyberburg_example_com_20240115_143022.json    ← API/integration
-└── cyberburg_example_com_20240115_143022.txt     ← Plain text
+Phase 3 — Vulnerability Identification
+  Security headers, cookie flags, HTTP methods, robots.txt,
+  Nikto, Nuclei (CVE + panels + exposure), directory brute,
+  SQLi (SQLMap + manual), XSS (Dalfox + DOM), API endpoint enum
+
+Phase 4 — Exploitation
+  SQLi → DB dump → credential harvest
+  Admin panel → default cred takeover
+  LFI → /etc/passwd / file extraction
+  Command injection → OS command execution
+  File upload → PHP webshell → RCE
+
+Phase 5 — Elite Attacks
+  SSRF, XXE, IDOR, JWT abuse, CORS, open redirect,
+  host header injection, verb tampering, smuggling,
+  business logic, subdomain takeover, prototype pollution
+
+Phase 6 — Intelligence Enrichment
+  CVE lookup against detected tech versions
+  Threat intel (AbuseIPDB, Shodan, DNSBL)
+  AI-powered analysis and attack chain reconstruction
+
+Phase 7 — Post-Exploitation
+  Network mapping (CIDR, ARP, service sweep)
+  Password auditing (hash cracking, spray)
+  Screenshot documentation
+  Metasploit resource script generation
+  Report generation (HTML + JSON + TXT + Bug Bounty)
 ```
 
 ---
 
 ## Use Cases & Scenarios
 
-### Scenario 1: Bug Bounty Hunting
+### Bug Bounty Hunting (Recommended Workflow)
 
 ```bash
-# Step 1: Initial recon
+# 1. Passive recon
 python3 cyberburg.py -t target.com --recon
 
-# Step 2: Full web vulnerability scan
+# 2. Threat intelligence
+python3 cyberburg.py -t target.com --threat
+
+# 3. Full web + vuln scan
 python3 cyberburg.py -t https://target.com --web
 
-# Step 3: Nuclei for quick CVE hits
-python3 cyberburg.py -t https://target.com --vuln
+# 4. API surface attack
+python3 cyberburg.py -t https://target.com --api
 
-# Review HTML report for findings to submit
+# 5. God Mode for quick wins
+python3 cyberburg.py -t https://target.com --god-mode
+
+# 6. CVE check detected tech
+python3 cyberburg.py -t https://target.com --cve
+
+# 7. AI analysis for report writing
+python3 cyberburg.py -t https://target.com --ai
 ```
 
-### Scenario 2: Client Pentest Engagement
+### Full Pentest Engagement (Single Command)
 
 ```bash
-# Full scan with professional HTML report
 sudo python3 cyberburg.py -t https://client.com
-
-# Report is ready at reports/ for client delivery
+# Prompts for target confirmation, then runs all base modules
+# HTML report auto-generated at output/<target>/
 ```
 
-### Scenario 3: Internal Network Assessment
+### Network Penetration Test
 
 ```bash
-# Scan internal web server
-python3 cyberburg.py -t 192.168.10.50
+# Discover all hosts in a subnet
+python3 cyberburg.py -t 192.168.1.1 --network
+# Prompts: Enter CIDR range [192.168.1.0/24]: 10.0.0.0/16
 
-# Focus on ports and services
-python3 cyberburg.py -t 192.168.10.0/24 --ports
+# Then scan a specific discovered host
+python3 cyberburg.py -t 10.0.0.45
 ```
 
-### Scenario 4: Pre-Production Security Check
+### Post-Exploitation — DB Dump
 
 ```bash
-# Quick scan before deployment
-python3 cyberburg.py -t https://staging.myapp.com --quick
-
-# Check SSL specifically
-python3 cyberburg.py -t staging.myapp.com --ssl
+# After initial scan confirms SQLi:
+python3 cyberburg.py -t https://target.com --exploit
+# Runs: sqlmap dump → admin panel takeover → LFI → CMDi → file upload
+# All credentials saved to output/<target>/loot/
 ```
 
-### Scenario 5: Red Team Engagement
+### WAF-Protected Target
 
 ```bash
-# Maximum stealth
+# Step 1: identify WAF
+python3 cyberburg.py -t https://waf-protected.com --web
+
+# Step 2: find bypass techniques
+python3 cyberburg.py -t https://waf-protected.com --waf-bypass
+# Prompts: Target GET parameter [id]:
+# Tries 8 encoding techniques across SQLi + XSS payloads
+```
+
+### Password-Focused Engagement
+
+```bash
+# Combine harvest (extracts hashes) then password audit (cracks them)
+python3 cyberburg.py -t https://target.com --harvest
+python3 cyberburg.py -t https://target.com --passwords
+# Pass any emails/usernames found during recon for the spray module
+```
+
+### Red Team Engagement
+
+```bash
+# Maximum stealth initial footprint
 sudo python3 cyberburg.py -t target.org --stealth
 
-# Custom modules only — avoid triggering IDS
+# Custom minimal module set (recon + SSL + passive intel only)
 python3 cyberburg.py -t target.org
-# Select option 4 (Custom), then 1,4,5 only
+# Select 4 → enter: 1,4,21
 ```
 
-### Scenario 6: CTF Competition
+### CTF Competition
 
 ```bash
-# Full scan on CTF target
-python3 cyberburg.py -t 10.10.10.x
+# Full scan — usually reveals: open ports, admin panels, SQLi, LFI, default creds
+python3 cyberburg.py -t 10.10.10.100
 
-# Usually reveals: open ports, web vulnerabilities, SQLi, LFI paths
+# OR targeted:
+python3 cyberburg.py -t 10.10.10.100 --exploit
 ```
 
 ---
 
 ## Troubleshooting
 
-### Common Issues & Fixes
+### `rich` library not found
 
-#### `rich` module not found
 ```bash
 pip3 install rich
-# or
-pip install rich
 ```
 
-#### Tools not found / missing
+### Tools missing / not found
+
 ```bash
-# Check what's missing
+# Check what's available
 python3 cyberburg.py --tools
 
 # Install missing tools
-sudo apt install nmap nikto sqlmap gobuster
+sudo apt install nmap nikto sqlmap gobuster john hashcat arp-scan
 ```
 
-#### Permission denied for stealth scan
+### Permission denied (stealth scan / ARP scan)
+
 ```bash
-# Stealth SYN scans require root
+# SYN scan and ARP scan require root
 sudo python3 cyberburg.py -t target.com --stealth
+sudo python3 cyberburg.py -t 192.168.1.1 --network
 ```
 
-#### Scan hangs or takes too long
-- Use `--quick` instead of full scan
-- Use `Ctrl+C` to interrupt — partial results will still be reported
-- Reduce nmap timing: edit `port_scanner.py`, change `-T4` to `-T3`
+### AI analysis not working
 
-#### No findings on HTTPS target
 ```bash
-# Ensure full URL with https://
-python3 cyberburg.py -t https://example.com
-# NOT: python3 cyberburg.py -t example.com
+# Verify API key is set
+echo $ANTHROPIC_API_KEY
+
+# Set it permanently
+echo 'export ANTHROPIC_API_KEY=sk-ant-...' >> ~/.bashrc
+source ~/.bashrc
+
+# Or use the interactive key setup
+python3 cyberburg.py  # → press K
 ```
 
-#### SQLMap not finding injections
-SQLMap is conservative by default. Manual testing with `--web` flag uses direct curl probing that may find error-based SQLi even when SQLMap misses it.
+### SQLMap not finding injections
 
-#### Reports directory permission error
-```bash
-mkdir -p reports
-chmod 755 reports
-```
+SQLMap is conservative by default. The manual error-based testing in `--web` uses direct curl probing that may find error-based SQLi even when SQLMap misses it. Also try `--exploit` which uses higher risk/level settings.
 
-#### Go tools not in PATH after install
+### Scan hangs or takes too long
+
+- Use `--quick` for a faster initial assessment
+- Press `Ctrl+C` — partial results are saved to `session.json` and a partial report is offered
+- For nmap: edit `port_scanner.py` and change `-T4` to `-T3`
+
+### Reports not showing in `View Previous Reports` (option 10)
+
+Reports are now scanned recursively from `output/` and `reports/` directories. If they were generated before v5, check `reports/` manually.
+
+### Go tools not in PATH after install
+
 ```bash
 export PATH="$PATH:$HOME/go/bin"
 echo 'export PATH="$PATH:$HOME/go/bin"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-#### wafw00f command not found
-```bash
-pip3 install wafw00f
-# Test: wafw00f --version
-```
+### Shodan/AbuseIPDB returning limited data
 
-### Debug Mode
-For verbose output and stack traces:
-```bash
-python3 cyberburg.py -t target.com 2>&1 | tee cyberburg_debug.log
-```
+These services work without API keys via free-tier endpoints (Shodan InternetDB, ipinfo.io). For full data, set the environment variables listed in the [Threat Intelligence API Keys](#threat-intelligence-api-keys) section.
 
----
+### Windows compatibility
 
-## Contributing
-
-Contributions are welcome! Here's how to add a new module:
-
-### Adding a New Scan Module
-
-1. Create `modules/your_module.py`
-2. Follow the standard return format:
-```python
-def your_scan(target: str) -> dict:
-    return {
-        "module": "Your Module Name",
-        "target": target,
-        "timestamp": get_timestamp(),
-        "raw": "",          # Raw tool output
-        "findings": [       # List of findings
-            {
-                "type": "Finding Type",
-                "value": "Finding description",
-                "severity": "CRITICAL|HIGH|MEDIUM|LOW|INFO"
-            }
-        ]
-    }
-```
-3. Import and call in `cyberburg.py` inside the appropriate run function
-4. Submit a PR to [github.com/faizzyhon](https://github.com/faizzyhon)
-
-### Module Development Guidelines
-- Always check if the tool is available using `check_tool()`
-- Set reasonable timeouts (never infinite)
-- Handle exceptions gracefully
-- Provide a fallback when the primary tool is missing
-- Parse all severity levels correctly
+Pure-Python modules work fully on Windows: data harvester, API tester, WAF bypass, threat intel, password auditor, god mode, CVE lookup, AI analysis. Modules wrapping Linux CLI tools (nmap, sqlmap, gobuster, etc.) require those tools installed in your Windows PATH or running under WSL.
 
 ---
 
@@ -1171,7 +1030,7 @@ def your_scan(target: str) -> dict:
 *Security Researcher & Tool Developer*
 
 | Platform | Link |
-|---|---|
+|----------|------|
 | GitHub | [github.com/faizzyhon](https://github.com/faizzyhon) |
 | Instagram | [instagram.com/faizzyhon](https://instagram.com/faizzyhon) |
 | Website | [faizzyhon.online](https://faizzyhon.online) |
@@ -1180,10 +1039,8 @@ def your_scan(target: str) -> dict:
 
 Cyberburg was built out of frustration with switching between 30+ tools during engagements. The vision: one tool, one interface, one report — professional quality output every time.
 
-### Support the Project
-
 If Cyberburg helped you find vulnerabilities, win a CTF, or deliver a better pentest report:
-- ⭐ Star the repository on GitHub
+- Star the repository on GitHub
 - Share with your security community
 - Submit issues or pull requests
 - Follow on Instagram for updates
@@ -1192,66 +1049,64 @@ If Cyberburg helped you find vulnerabilities, win a CTF, or deliver a better pen
 
 ## Changelog
 
-### v2.0.0 — PHANTOM BLADE (Current)
-- Complete rewrite in Python with Rich TUI
-- Added 8 scan modules (recon, ports, web, SSL, SQLi, XSS, dir, nuclei)
-- Professional HTML report with Chart.js visualization
-- JSON + TXT report formats
-- Interactive menu + CLI argument modes
-- 30+ tool integrations
-- Automatic tool availability detection
-- Stealth scan mode
-- Custom scan module selection
+### v5.0.0 — PHANTOM PROTOCOL
+- **NEW Module 18**: Network Mapper — CIDR ping sweep, ARP scan, nmap host discovery, OS fingerprinting, service sweep across all live hosts
+- **NEW Module 19**: API Security Tester — endpoint discovery (50 paths), BOLA/IDOR, mass assignment, rate limiting, GraphQL introspection + injection, sensitive data scan
+- **NEW Module 20**: WAF Bypass Engine — WAF detection (10 signatures), 8 encoding techniques, HTTP parameter pollution, IP-spoofing header bypass
+- **NEW Module 21**: Threat Intelligence — AbuseIPDB, crt.sh certificate transparency, HackerTarget passive DNS, Shodan InternetDB (free) + full API, DNSBL (7 lists), VirusTotal optional
+- **NEW Module 22**: Password Auditor — hash extraction + identification, John the Ripper + Hashcat, 150+ default credential pairs, slow password spray, password policy check
+- **FIX**: `sqlmap_quick/full/post` hardcoded `/tmp/` paths — now uses `output/<target>/loot/sqlmap_*/` with `tempfile` fallback (was broken on Windows)
+- **FIX**: `sqlmap_full` broken DB-name fallback regex removed; primary regex extended to capture hyphenated DB names
+- **FIX**: SQLMap raw output now saved to loot folder on every run
+- **FIX**: `harvest_js_secrets` content-type check now accepts `application/javascript` and `ecmascript` (was skipping most CDN-served JS files)
+- **FIX**: `harvest_backup_files` first-chunk data loss bug — first 1024 bytes were consumed for HTML detection then discarded when writing; now prepended correctly
+- **FIX**: `harvest_config_files` `<html>` false-positive filter removed — was incorrectly blocking valid `phpinfo.php` responses
+- **FIX**: `exploit_engine` DB name regex extended to `[\w\-]+` for hyphenated database names
+- **FIX**: `admin_panel_takeover` false positive reduction — now diffs response against login-page baseline before declaring success
+- **FIX**: `_view_reports()` now recursively walks `output/` and `reports/` (was only showing `./reports/`)
+- **FIX**: Custom scan menu (option 4) now includes all v3/v4/v5 modules
+- **FIX**: Removed unused `from rich.prompt import Prompt as P` import in `_run_auth`
+- Version bumped to v5.0.0
 
-### v1.0.0 — INITIAL RELEASE
-- Basic reconnaissance
-- Port scanning via nmap
-- Nikto web scan
-- Simple text output
+### v4.0.0 — DARK MATTER
+- God Mode 12-vector elite attack chain (SSRF, XXE, IDOR, JWT, CORS, open redirect, host header, verb tampering, smuggling, business logic, subdomain takeover, prototype pollution)
+- CVE intelligence lookup with offline DB + live NVD API
+- Claude AI expert analysis (claude-sonnet-4-6, streaming)
+- Screenshot capture (chromium headless / wkhtmltoimage / HTML fallback)
+- Metasploit .rc resource script generation (20+ module mappings)
 
----
+### v3.0.0 — GHOST PROTOCOL
+- Automated exploitation engine (SQLi DB dump, admin panel takeover, LFI exploitation, command injection, file upload)
+- Data harvesting (JS secrets 20 patterns, config file exposure 30+ paths, git repository exposure, backup file detection, sensitive endpoint discovery)
+- Organized output folder system: `output/<target>_<timestamp>/loot/`
+- Session auto-snapshot (session.json updated after every module)
 
-## License
+### v2.0.0 — PHANTOM BLADE
+- Flask web dashboard (localhost:5000)
+- Authentication tester (login brute-force, default creds, MFA check, lockout detection)
+- Bug bounty report auto-generation on CRITICAL findings
+- `bug_bounty_reports/` folder
 
-MIT License — see [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2024 Faiz Zyhon (github.com/faizzyhon)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
+### v1.0.0 — Initial Release
+- 9 scan modes, 30+ tool integrations
+- Interactive menu + full CLI argument mode
+- Modules: recon, port scanner, web scanner, SSL analyzer, SQL injection, XSS scanner, directory bruteforce, nuclei scan
+- Report generation: HTML (Chart.js), JSON, TXT
+- Automated tool availability detection
 
 ---
 
 <div align="center">
 
-**⚠️ AUTHORIZED SECURITY TESTING ONLY ⚠️**
+**AUTHORIZED SECURITY TESTING ONLY**
 
-*Cyberburg is a tool for professional security researchers and pentesters.*  
-*Always obtain written permission before testing any system.*  
+*Cyberburg is a tool for professional security researchers and pentesters.*
+*Always obtain written permission before testing any system.*
 *Unauthorized testing is illegal and unethical.*
 
 ---
 
-Made with ❤️ by **Faiz Zyhon**
+Made with passion by **Faiz Zyhon**
 
 [github.com/faizzyhon](https://github.com/faizzyhon) • [instagram.com/faizzyhon](https://instagram.com/faizzyhon) • [faizzyhon.online](https://faizzyhon.online)
 
